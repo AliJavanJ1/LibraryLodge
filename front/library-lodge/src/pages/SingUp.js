@@ -1,13 +1,5 @@
-/*
-* a similar page to the login page but with a different form
-* in this page the user can sign up to the website by inputting his/her username, email, password and password confirmation
-* it has link to the login page
-* */
-
-// Path: front/library-lodge/src/pages/SingUp.js
-
 import React, {useState} from 'react';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {signUp, fetchProfileData} from "../redux/profileSlice";
 import {useNavigate, Link as RouterLink} from "react-router-dom";
 import {useFormik} from "formik";
@@ -15,6 +7,7 @@ import * as Yup from "yup";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import Alert from "./Alert";
+import {useEffectOnce} from "react-use";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(1),
     },
     submit: {
@@ -38,6 +31,13 @@ const SignUp = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const profile = useSelector((state) => state.profile);
+
+    useEffectOnce(() => {
+        if (!profile) {
+            // navigate('/'); // TODO: redirect to dashboard
+        }
+    });
 
     const formik = useFormik({
         validateOnMount: true,

@@ -1,5 +1,4 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-// import initialState of staticSlice as staticIS
 import {initialState as staticIS} from './staticSlice'
 
 const dummy = {
@@ -16,7 +15,6 @@ const fetchProfileData = createAsyncThunk(
     }
 )
 
-// login function that use username and password to login and saves the token in the cookie
 const login = createAsyncThunk(
     'profile/login',
     async (arg) => {
@@ -45,9 +43,20 @@ const signUp = createAsyncThunk(
     }
 )
 
-const initialState = {
-    ...dummy,
-}
+const logout = createAsyncThunk(
+    'profile/logout',
+    async () => {
+        return await fetch(staticIS.apiDomain + '/logout/', {
+            method: 'POST',
+            credentials: 'include',
+        }).then(response => response.json())
+    }
+)
+
+// const initialState = {
+//     ...dummy,
+// }
+const initialState = null
 
 const staticSlice = createSlice({
     name: 'profile',
@@ -60,9 +69,13 @@ const staticSlice = createSlice({
             state = action.payload
             return state
         })
+        builder.addCase(logout.fulfilled, (state, action) => {
+            state = null
+            return state
+        })
     }
 })
 
 export const {} = staticSlice.actions
 export default staticSlice.reducer
-export {fetchProfileData, login, signUp}
+export {fetchProfileData, login, signUp, logout}

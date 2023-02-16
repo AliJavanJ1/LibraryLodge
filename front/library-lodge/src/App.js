@@ -4,6 +4,7 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import SignUp from "./pages/SingUp";
+import Main from "./pages/Main";
 
 LicenseInfo.setLicenseKey('x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e');
 
@@ -44,9 +45,10 @@ function App() {
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Dashboard/>}/>
-                    <Route path="/login" element={<Login/>}/>
-                    <Route path="/signup" element={<SignUp/>} />
+                    <Route path="/" element={<Main/>}/>
+                    {/*<Route path="/" element={<Dashboard/>}/>*/}
+                    <Route exact path="/login" element={<Login/>}/>
+                    <Route exact path="/signup" element={<SignUp/>} />
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>
