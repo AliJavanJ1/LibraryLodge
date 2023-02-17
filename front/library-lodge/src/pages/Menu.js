@@ -38,7 +38,7 @@ const StyledMenu = styled((props) => (
     <MuiMenu
         elevation={0}
         anchorOrigin={{
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'right',
         }}
         transformOrigin={{
@@ -170,6 +170,10 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
                     anchorEl={anchorEl}
                     open={newMenuOpen}
                     onClose={handleNewMenuClose}
+                    sx={{
+                        top: -16,
+                        left: -8,
+                    }}
                 >
                     <MenuItem onClick={handleNewMenuClose} disableRipple>
                         <FileUploadIcon />
