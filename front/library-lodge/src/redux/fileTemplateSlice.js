@@ -10,6 +10,14 @@ import FilterNoneOutlinedIcon from '@mui/icons-material/FilterNoneOutlined';
 import MusicNoteOutlinedIcon from '@mui/icons-material/MusicNoteOutlined';
 import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
 
+export function editFileTemplate() {//todo
+}
+
+
+export function addFileTemplate() {//todo
+}
+
+
 const dummy = {
     1: {
         name: 'Music',
