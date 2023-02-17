@@ -1,17 +1,35 @@
-import {AppBar, Toolbar, SvgIcon, Link, Box, InputBase} from "@mui/material";
+import {AppBar as MuiAppBar, Toolbar, SvgIcon, Link, Box, InputBase, styled} from "@mui/material";
 import {ReactComponent as logo} from "../assets/drive.svg";
 import {Link as RouterLink} from "react-router-dom";
 import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
+import MenuIcon from '@mui/icons-material/Menu';
 import {logout} from "../redux/profileSlice";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import Alert from "./Alert";
 
-export default function Header() {
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'menuOpen',
+})(({ theme, menuOpen }) => ({
+    transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(menuOpen && {
+        width: `calc(100% - ${240}px)`,
+        marginLeft: `${240}px`,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}));
+
+export default function Header({ setDrawerMenuOpen, drawerMenuOpen }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [error, setError] = useState(null);
@@ -26,17 +44,43 @@ export default function Header() {
             }
         });
     }
+    const handleSettings = () => {
+        setDrawerMenuOpen(false);
+        navigate('/settings');
+    }
 
     return (
-        <AppBar position="static">
+        <AppBar position="static" menuOpen={drawerMenuOpen}>
             <Toolbar>
-                <Link variant="h6"  component={RouterLink} to='/' sx={{
-                    flexGrow: 2,
-                    display: "flex",
-                    justifyContent: "flex-start",
-                    color: "inherit",
-                    textDecoration: "none",
-                }}>
+                <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    onClick={() => setDrawerMenuOpen(true)}
+                    disableRipple
+                    sx={{
+                        fontSize: "25px",
+                        mr: 2,
+                        ...(drawerMenuOpen && { display: 'none' }),
+                        transition: 'transform 0.4s ease-in-out',
+                        '&:hover': {
+                            transform: 'scale(1.3) translateX(5px)',
+                        }
+                    }}
+                >
+                    <MenuIcon />
+                </IconButton>
+                <Link variant="h6"
+                      component={RouterLink}
+                      to='/'
+                      sx={{
+                        flexGrow: 2,
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        color: "inherit",
+                        textDecoration: "none",
+                      }}
+                      onClick={() => setDrawerMenuOpen(false)}
+                >
                     <SvgIcon component={logo} inheritViewBox sx={{
                         fontSize: 35,
                         marginRight: `10px`,
@@ -84,6 +128,7 @@ export default function Header() {
                         ml: 3,
                     }}
                     disableRipple
+                    onClick={handleSettings}
                 >
                     <SettingsIcon
                         sx={{

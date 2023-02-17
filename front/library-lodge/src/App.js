@@ -45,10 +45,10 @@ function App() {
         <ThemeProvider theme={theme}>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Main/>}/>
-                    {/*<Route path="/" element={<Dashboard/>}/>*/}
                     <Route exact path="/login" element={<Login/>}/>
                     <Route exact path="/signup" element={<SignUp/>} />
+                    <Route path="/*" element={<Main/>}/>
+                    {/*<Route path="/" element={<Dashboard/>}/>*/}
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>
