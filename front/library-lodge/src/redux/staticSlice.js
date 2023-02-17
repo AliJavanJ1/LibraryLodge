@@ -5,6 +5,8 @@ const dummy = {
 }
 
 const initialState = {
+    'domain': 'http://localhost:8000',
+    'apiDomain': 'http://localhost:8000/api',
     ...dummy,
 }
 
@@ -18,3 +20,5 @@ const staticSlice = createSlice({
 
 export const {} = staticSlice.actions
 export default staticSlice.reducer
+export {initialState}
+
