@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {fetchProfileData, login} from "../redux/profileSlice";
 import {makeStyles} from "@mui/styles";
-import Alert from "./Alert";
+import Alert from "../components/Alert";
 import {useEffectOnce} from "react-use";
 
 
@@ -57,8 +57,8 @@ const Login = () => {
             dispatch(login(values))
                 .then((res) => {
                     if (res.payload && res.payload.status === 200) {
-                        dispatch(fetchProfileData())
-                        navigate('/dashboard');
+                        // dispatch(fetchProfileData()) // // TODO: should we fetch profile data here?
+                        navigate('/');
                     } else {
                         setError(res.payload ? res.payload.data : res.error.message);
                     }

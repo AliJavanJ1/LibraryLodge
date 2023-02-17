@@ -1,8 +1,8 @@
 import {Fragment, useState} from "react";
-import Header from "./Header";
+import Header from "../components/Header";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {useSelector} from "react-redux";
-import Menu from "./Menu";
+import Menu from "../components/Menu";
 import {Box, styled} from "@mui/material";
 
 

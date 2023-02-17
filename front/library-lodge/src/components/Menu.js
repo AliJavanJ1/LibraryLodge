@@ -24,6 +24,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import HomeIcon from "@mui/icons-material/Home";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
+import EditProfileDialog from "./EditProfileDialog";
 
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -89,6 +90,7 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
         setAnchorEl(null);
     };
 
+
     const handleLogout = () => {
         dispatch(logout()).then((res) => {
             if (res.payload && res.payload.status === 200) {
@@ -104,9 +106,10 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
         navigate('/settings');
     }
 
+    const [profileDialogOpen, setProfileDialogOpen] = useState(false);
     const handleProfile = () => {
         setDrawerMenuOpen(false);
-        navigate('/profile');
+        setProfileDialogOpen(true);
     }
 
     const handleHome = () => {
@@ -224,6 +227,8 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
                     </ListItemButton>
                 </ListItem>
             </List>
+            {profileDialogOpen
+             && <EditProfileDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)}/>}
             {error && <Alert severity="error" message={error} resetFunc={() => setError(null)}/>}
         </Drawer>
     )

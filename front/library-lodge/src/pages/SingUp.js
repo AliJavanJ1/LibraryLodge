@@ -6,7 +6,7 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import Alert from "./Alert";
+import Alert from "../components/Alert";
 import {useEffectOnce} from "react-use";
 
 
@@ -63,7 +63,7 @@ const SignUp = () => {
             dispatch(signUp(values))
                 .then((res) => {
                     if (res.payload && res.payload.status === 200) {
-                        dispatch(fetchProfileData())
+                        // dispatch(fetchProfileData()) // TODO: should we fetch profile data after sign up?
                         navigate('/');
                     } else {
                         setError(res.payload ? res.payload.data : res.error.message);
@@ -120,7 +120,7 @@ const SignUp = () => {
                         label="Password"
                         type="password"
                         id="password"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         value={formik.values.password}
                         onChange={formik.handleChange}
                         error={formik.touched.password && Boolean(formik.errors.password)}
@@ -135,7 +135,7 @@ const SignUp = () => {
                         label="Password Confirmation"
                         type="password"
                         id="password_confirmation"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         value={formik.values.password_confirmation}
                         onChange={formik.handleChange}
                         error={formik.touched.password_confirmation && Boolean(formik.errors.password_confirmation)}

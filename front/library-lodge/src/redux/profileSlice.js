@@ -2,7 +2,8 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {initialState as staticIS} from './staticSlice'
 
 const dummy = {
-
+    "username": "test",
+    "email": "test@email.com",
 }
 
 const fetchProfileData = createAsyncThunk(
@@ -53,10 +54,24 @@ const logout = createAsyncThunk(
     }
 )
 
-// const initialState = {
-//     ...dummy,
-// }
-const initialState = null
+const editProfile = createAsyncThunk(
+    'profile/editProfile',
+    async (arg) => {
+        return await fetch(staticIS.apiDomain + '/edit-profile/', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(arg),
+        }).then(response => response.json())
+    }
+)
+
+const initialState = {
+    ...dummy,
+}
+// const initialState = null
 
 const staticSlice = createSlice({
     name: 'profile',
@@ -69,8 +84,20 @@ const staticSlice = createSlice({
             state = action.payload
             return state
         })
+        builder.addCase(login.fulfilled, (state, action) => {
+            state = action.payload
+            return state
+        })
+        builder.addCase(signUp.fulfilled, (state, action) => {
+            state = action.payload
+            return state
+        })
         builder.addCase(logout.fulfilled, (state, action) => {
             state = null
+            return state
+        })
+        builder.addCase(editProfile.fulfilled, (state, action) => {
+            state = action.payload
             return state
         })
     }
@@ -78,4 +105,4 @@ const staticSlice = createSlice({
 
 export const {} = staticSlice.actions
 export default staticSlice.reducer
-export {fetchProfileData, login, signUp, logout}
+export {fetchProfileData, login, signUp, logout, editProfile}
