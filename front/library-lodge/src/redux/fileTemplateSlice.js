@@ -1,4 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit'
+import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
+import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
+import SlideshowOutlinedIcon from '@mui/icons-material/SlideshowOutlined';
+import MovieFilterOutlinedIcon from '@mui/icons-material/MovieFilterOutlined';
+import MenuBookOutlinedIcon from '@mui/icons-material/MenuBookOutlined';
+import LibraryBooksOutlinedIcon from '@mui/icons-material/LibraryBooksOutlined';
+import TerminalOutlinedIcon from '@mui/icons-material/TerminalOutlined';
+import FilterNoneOutlinedIcon from '@mui/icons-material/FilterNoneOutlined';
+import MusicNoteOutlinedIcon from '@mui/icons-material/MusicNoteOutlined';
+import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
 
 const dummy = {
     1: {
@@ -9,6 +19,8 @@ const dummy = {
         attachments: [
             'Cover', 'Lyrics'
         ],
+        icon: MusicNoteOutlinedIcon,
+        libIcon: LibraryMusicOutlinedIcon
     },
     2: {
         name: 'Movie',
@@ -18,6 +30,8 @@ const dummy = {
         attachments: [
             'Subtitle', 'Audio'
         ],
+        icon: SlideshowOutlinedIcon,
+        libIcon: MovieFilterOutlinedIcon,
     },
     3: {
         name: 'Book',
@@ -27,6 +41,8 @@ const dummy = {
         attachments: [
             'Cover', 'Summary'
         ],
+        icon: MenuBookOutlinedIcon,
+        libIcon: LibraryBooksOutlinedIcon
     },
     4: {
         name: 'Software',
@@ -36,6 +52,8 @@ const dummy = {
         attachments: [
             'Patch'
         ],
+        icon: TerminalOutlinedIcon,
+        libIcon: FilterNoneOutlinedIcon
     },
     5: {
         name: 'Picture',
@@ -43,6 +61,8 @@ const dummy = {
             'Photographer', 'Date', 'Place'
         ],
         attachments: [],
+        icon: InsertPhotoOutlinedIcon,
+        libIcon: PermMediaOutlinedIcon
     }
 }
 
