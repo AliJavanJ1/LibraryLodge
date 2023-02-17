@@ -6,14 +6,21 @@ const dummy = {
         library: 1,
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 1,
+        size: 12345,
         information: {
             'Singer': 'Chvrches',
             'Year': '2013',
             'Genre': 'Synthpop',
         },
         attachments: {
-            'Cover': 42141,
-            'Lyrics': 42142,
+            'Cover': {
+                id: 42141,
+                size: 12345,
+            },
+            'Lyrics': {
+                id: 42142,
+                size: 12345,
+            },
         }
     },
     2: {
@@ -21,6 +28,7 @@ const dummy = {
         library: 1,
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 1,
+        size: 12345,
         information: {
             'Singer': 'Chvrches',
             'Year': '2015',
@@ -32,14 +40,21 @@ const dummy = {
         library: 2,
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 3,
+        size: 12345,
         information: {
             'Author': 'Suzanne Collins',
             'Year': '2008',
             'Genre': 'Young Adult',
         },
         attachments: {
-            'Cover': 42143,
-            'Summary': 42144,
+            'Cover': {
+                id: 42143,
+                size: 12345,
+            },
+            'Summary': {
+                id: 42144,
+                size: 12345,
+            },
         }
     },
     4: {
@@ -47,6 +62,7 @@ const dummy = {
         library: 2,
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 3,
+        size: 12345,
         information: {
             'Author': 'Suzanne Collins',
             'Year': '2009',
@@ -56,6 +72,7 @@ const dummy = {
     5: {
         name: 'The Hunger Games: Mockingjay',
         library: 2,
+        size: 12345,
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 3,
         information: {
@@ -67,6 +84,7 @@ const dummy = {
     6: {
         name: 'Starry Night',
         library: null,
+        size: 12345,
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 5,
         information: {

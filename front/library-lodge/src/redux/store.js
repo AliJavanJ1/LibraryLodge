@@ -5,6 +5,7 @@ import fileDetailReducer from "./fileDetailSlice";
 import libraryDetailReducer from "./libraryDetailSlice";
 import fileTemplateReducer from "./fileTemplateSlice";
 import profileReducer from "./profileSlice";
+import envSlice from "./envSlice";
 
 /*
 {
@@ -19,12 +20,16 @@ import profileReducer from "./profileSlice";
             name: 'name',
             library: 'library_id', //null if it's not in a library
             last_modified: 'last_modified',
+            size: 'size',
             file_template: 'file_template_id',
             'information': {
                 'name' : 'value',
             },
             'attachments': {
-                'name': 'id',
+                'name': {
+                    id: 'id',
+                    size: 'size',
+                },
             },
         },
     },
@@ -44,18 +49,18 @@ import profileReducer from "./profileSlice";
             attachments: [
                 'name',
             ],
-            icon: 'id', //null/not existent if it's built-in
+            icon: 'icon',
+            libIcon: 'icon'
         },
     },
-    tree: [
-        {
-            type: 'file' | 'library',
-            id: 'file_id' | 'library_id',
-            children: [
+    tree: {
+        libraries: {
+            'id': {
                 // recursive
-            ],
+            }
         },
-    ],
+        files: ['id']
+    },
 }
  */
 
@@ -63,10 +68,11 @@ const store = configureStore({
     reducer: {
         static: staticReducer,
         tree: treeReducer,
-        file_detail: fileDetailReducer,
-        library_detail: libraryDetailReducer,
-        file_template: fileTemplateReducer,
+        file_details: fileDetailReducer,
+        library_details: libraryDetailReducer,
+        file_templates: fileTemplateReducer,
         profile: profileReducer,
+        env: envSlice,
     },
 });
 
