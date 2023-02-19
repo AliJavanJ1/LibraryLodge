@@ -8,16 +8,16 @@ const dummy = {
         file_template: 1,
         size: 12345,
         information: {
-            'Singer': 'Chvrches',
-            'Year': '2013',
-            'Genre': 'Synthpop',
+            1: 'Chvrches',
+            2: '2013',
+            3: 'Synthpop',
         },
         attachments: {
-            'Cover': {
+            1: {
                 id: 42141,
                 size: 12345,
             },
-            'Lyrics': {
+            2: {
                 id: 42142,
                 size: 12345,
             },
@@ -30,9 +30,9 @@ const dummy = {
         file_template: 1,
         size: 12345,
         information: {
-            'Singer': 'Chvrches',
-            'Year': '2015',
-            'Genre': 'Synthpop',
+            1: 'Chvrches',
+            2: '2015',
+            3: 'Synthpop',
         }
     },
     3: {
@@ -42,16 +42,16 @@ const dummy = {
         file_template: 3,
         size: 12345,
         information: {
-            'Author': 'Suzanne Collins',
-            'Year': '2008',
-            'Genre': 'Young Adult',
+            1: 'Suzanne Collins',
+            2: '2008',
+            3: 'Young Adult',
         },
         attachments: {
-            'Cover': {
+            1: {
                 id: 42143,
                 size: 12345,
             },
-            'Summary': {
+            2: {
                 id: 42144,
                 size: 12345,
             },
@@ -64,9 +64,9 @@ const dummy = {
         file_template: 3,
         size: 12345,
         information: {
-            'Author': 'Suzanne Collins',
-            'Year': '2009',
-            'Genre': 'Young Adult',
+            1: 'Suzanne Collins',
+            2: '2009',
+            3: 'Young Adult',
         }
     },
     5: {
@@ -76,9 +76,9 @@ const dummy = {
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 3,
         information: {
-            'Author': 'Suzanne Collins',
-            'Year': '2010',
-            'Genre': 'Young Adult',
+            1: 'Suzanne Collins',
+            2: '2010',
+            3: 'Young Adult',
         }
     },
     6: {
@@ -88,9 +88,9 @@ const dummy = {
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 5,
         information: {
-            'Photographer': 'Vincent van Gogh',
-            'Date': '1889',
-            'Place': 'Saint-Rémy-de-Provence',
+            1: 'Vincent van Gogh',
+            2: '1889',
+            3: 'Saint-Rémy-de-Provence',
         }
     }
 }
@@ -107,5 +107,5 @@ const staticSlice = createSlice({
     },
 })
 
-export const {} = staticSlice.actions
+// export const {} = staticSlice.actions
 export default staticSlice.reducer

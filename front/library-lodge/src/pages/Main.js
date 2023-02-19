@@ -4,6 +4,8 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import {useSelector} from "react-redux";
 import Menu from "../components/Menu";
 import {Box, styled} from "@mui/material";
+import SettingDialog from "../components/settingDialog";
+import Dashboard from "./Dashboard";
 
 
 const MainBody = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerMenuOpen' })(
@@ -44,10 +46,11 @@ export default function Main() {
                 <Menu setDrawerMenuOpen={setDrawerMenuOpen} drawerMenuOpen={drawerMenuOpen}/>
                 <MainBody drawerMenuOpen={drawerMenuOpen}>
                     <Routes>
-                        <Route path="/" element={<div> Body </div>}/>
+                        <Route path="/" element={<Dashboard/>}/>
                     </Routes>
                 </MainBody>
             </Box>
+            <SettingDialog/>
         </Fragment>)
         : <Navigate to="/login"/>;
 }

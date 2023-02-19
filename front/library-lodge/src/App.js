@@ -1,7 +1,6 @@
 import {LicenseInfo} from '@mui/x-license-pro';
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import SignUp from "./pages/SingUp";
 import Main from "./pages/Main";
@@ -48,7 +47,6 @@ function App() {
                     <Route exact path="/login" element={<Login/>}/>
                     <Route exact path="/signup" element={<SignUp/>} />
                     <Route path="/*" element={<Main/>}/>
-                    {/*<Route path="/" element={<Dashboard/>}/>*/}
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

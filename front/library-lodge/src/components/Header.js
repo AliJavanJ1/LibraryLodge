@@ -1,6 +1,6 @@
 import {AppBar as MuiAppBar, Toolbar, SvgIcon, Link, Box, InputBase, styled} from "@mui/material";
 import {ReactComponent as logo} from "../assets/drive.svg";
-import {Link as RouterLink} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import SettingsIcon from '@mui/icons-material/Settings';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
@@ -8,9 +8,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import {logout} from "../redux/profileSlice";
 import {useDispatch} from "react-redux";
-import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import Alert from "./Alert";
+import {setSettingDialogOpen} from "../redux/envSlice";
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'menuOpen',
@@ -46,7 +46,7 @@ export default function Header({ setDrawerMenuOpen, drawerMenuOpen }) {
     }
     const handleSettings = () => {
         setDrawerMenuOpen(false);
-        navigate('/settings');
+        dispatch(setSettingDialogOpen(true));
     }
 
     return (
