@@ -9,4 +9,12 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True)
     password = Column(String)
+    name = Column(String)
     is_deleted = Column(Boolean)
+
+class UserLoginToken(Base):
+    __tablename__ = "login_tokens"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    token = Column(String, unique=True)
