@@ -1,9 +1,9 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-// import initialState of staticSlice as staticIS
 import {initialState as staticIS} from './staticSlice'
 
 const dummy = {
-
+    "username": "test",
+    "email": "test@email.com",
 }
 
 const fetchProfileData = createAsyncThunk(
@@ -16,7 +16,6 @@ const fetchProfileData = createAsyncThunk(
     }
 )
 
-// login function that use username and password to login and saves the token in the cookie
 const login = createAsyncThunk(
     'profile/login',
     async (arg) => {
@@ -45,9 +44,34 @@ const signUp = createAsyncThunk(
     }
 )
 
+const logout = createAsyncThunk(
+    'profile/logout',
+    async () => {
+        return await fetch(staticIS.apiDomain + '/logout/', {
+            method: 'POST',
+            credentials: 'include',
+        }).then(response => response.json())
+    }
+)
+
+const editProfile = createAsyncThunk(
+    'profile/editProfile',
+    async (arg) => {
+        return await fetch(staticIS.apiDomain + '/edit-profile/', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(arg),
+        }).then(response => response.json())
+    }
+)
+
 const initialState = {
     ...dummy,
 }
+// const initialState = null
 
 const staticSlice = createSlice({
     name: 'profile',
@@ -60,9 +84,25 @@ const staticSlice = createSlice({
             state = action.payload
             return state
         })
+        builder.addCase(login.fulfilled, (state, action) => {
+            state = action.payload
+            return state
+        })
+        builder.addCase(signUp.fulfilled, (state, action) => {
+            state = action.payload
+            return state
+        })
+        builder.addCase(logout.fulfilled, (state, action) => {
+            state = null
+            return state
+        })
+        builder.addCase(editProfile.fulfilled, (state, action) => {
+            state = action.payload
+            return state
+        })
     }
 })
 
 export const {} = staticSlice.actions
 export default staticSlice.reducer
-export {fetchProfileData, login, signUp}
+export {fetchProfileData, login, signUp, logout, editProfile}

@@ -1,20 +1,13 @@
-/*
-* a similar page to the login page but with a different form
-* in this page the user can sign up to the website by inputting his/her username, email, password and password confirmation
-* it has link to the login page
-* */
-
-// Path: front/library-lodge/src/pages/SingUp.js
-
 import React, {useState} from 'react';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {signUp, fetchProfileData} from "../redux/profileSlice";
 import {useNavigate, Link as RouterLink} from "react-router-dom";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import Alert from "./Alert";
+import Alert from "../components/Alert";
+import {useEffectOnce} from "react-use";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(1),
     },
     submit: {
@@ -38,6 +31,13 @@ const SignUp = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const profile = useSelector((state) => state.profile);
+
+    useEffectOnce(() => {
+        if (!profile) {
+            // navigate('/'); // TODO: redirect to dashboard
+        }
+    });
 
     const formik = useFormik({
         validateOnMount: true,
@@ -63,7 +63,7 @@ const SignUp = () => {
             dispatch(signUp(values))
                 .then((res) => {
                     if (res.payload && res.payload.status === 200) {
-                        dispatch(fetchProfileData())
+                        // dispatch(fetchProfileData()) // TODO: should we fetch profile data after sign up?
                         navigate('/');
                     } else {
                         setError(res.payload ? res.payload.data : res.error.message);
@@ -120,7 +120,7 @@ const SignUp = () => {
                         label="Password"
                         type="password"
                         id="password"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         value={formik.values.password}
                         onChange={formik.handleChange}
                         error={formik.touched.password && Boolean(formik.errors.password)}
@@ -135,7 +135,7 @@ const SignUp = () => {
                         label="Password Confirmation"
                         type="password"
                         id="password_confirmation"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         value={formik.values.password_confirmation}
                         onChange={formik.handleChange}
                         error={formik.touched.password_confirmation && Boolean(formik.errors.password_confirmation)}

@@ -1,23 +1,13 @@
-/*
-A login page designed with material ui and has username and password fields
-It also has a login button which is disabled until all fields are filled
-It also has a link to the signup page
-styles of page should be something like default material ui styles based on the theme and also set form at the center of the page
-show server side errors by snackbar and alert of material ui
-*/
-
-
-// Path: front/library-lodge/src/pages/Login.js
-
 import React, {useState} from 'react';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useNavigate, Link as RouterLink} from "react-router-dom";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {fetchProfileData, login} from "../redux/profileSlice";
 import {makeStyles} from "@mui/styles";
-import Alert from "./Alert";
+import Alert from "../components/Alert";
+import {useEffectOnce} from "react-use";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -28,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(1),
     },
     submit: {
@@ -41,6 +31,15 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
+    const profile = useSelector((state) => state.profile);
+
+    useEffectOnce(() => {
+        if (profile) {
+            // navigate('/'); // TODO: redirect to dashboard
+        }
+    });
+
+
 
     const formik = useFormik({
         validateOnMount: true,
@@ -58,10 +57,9 @@ const Login = () => {
             dispatch(login(values))
                 .then((res) => {
                     if (res.payload && res.payload.status === 200) {
-                        dispatch(fetchProfileData())
-                        navigate('/dashboard');
+                        // dispatch(fetchProfileData()) // // TODO: should we fetch profile data here?
+                        navigate('/');
                     } else {
-                        console.log(res.payload ? res.payload.data : res.error.message)
                         setError(res.payload ? res.payload.data : res.error.message);
                     }
                 })

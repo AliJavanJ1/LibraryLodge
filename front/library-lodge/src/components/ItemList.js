@@ -8,13 +8,13 @@ import {useSelector} from "react-redux";
 import _ from "lodash";
 import {useLocationItems} from "../utils";
 import prettyBytes from 'pretty-bytes';
+import {iconMap} from "../redux/fileTemplateSlice";
 
 const isFile = (row) => 'size' in row
 
 
 const NameCell = (props) => {
     const {row: {icon, name}} = props
-    console.log(icon, name)
     return (
         <Stack direction={'row'}>
             <Stack sx={{
@@ -25,7 +25,7 @@ const NameCell = (props) => {
                         color: 'orange'
                     })
             }}>
-                {icon.type.render()}
+                {iconMap[icon].type.render()}
             </Stack>
             {name}
         </Stack>
@@ -73,11 +73,11 @@ const getColumns = (ft) => {
         }
     ]
     if (ft != null) {
-        let info_cols = _.map(ft.information, (info) => {
+        let info_cols = _.map(ft.information, (info, key) => {
             return {
                 field: info,
                 width: 200,
-                valueGetter: (params) => info in params.row.information ? params.row.information[info] : '-',
+                valueGetter: (params) => key in params.row.information ? params.row.information[key] : '-',
             }
         })
         columns = _.concat(columns, info_cols)
