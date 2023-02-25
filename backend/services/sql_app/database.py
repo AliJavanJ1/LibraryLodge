@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "postgresql://myuserdrive:mypass@127.0.0.1/drive"
+SQLALCHEMY_DATABASE_URL = "postgresql://reabdz@127.0.0.1/drive"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
