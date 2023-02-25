@@ -8,6 +8,7 @@ class File(Base):
     __tablename__ = "files"
 
     id = Column(String, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id")),
     name = Column(String)
     desc = Column(String)
     extra_info = Column(JSON)
