@@ -6,6 +6,7 @@ import Menu from "../components/Menu";
 import {Box, styled} from "@mui/material";
 import SettingDialog from "../components/settingDialog";
 import Dashboard from "./Dashboard";
+import ListItemContextMenu from "../components/ListItemContextMenu"; // TODO: remove this and use it for List Items
 
 
 const MainBody = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerMenuOpen' })(
@@ -32,10 +33,28 @@ export default function Main() {
     const isLoggedIn = useSelector((state) => state.profile || true); // TODO: remove " || true"
     const [drawerMenuOpen, setDrawerMenuOpen] = useState(false);
 
+    const [listItemContextMenu, setListItemContextMenu] = useState(null); // TODO: remove this and use it for List Items
+    const handleListItemContextMenu = (event) => { // TODO: remove this and use it for List Items
+        event.preventDefault();
+        setListItemContextMenu(
+            listItemContextMenu === null
+                ? {
+                    mouseX: event.clientX + 2,
+                    mouseY: event.clientY - 6,
+                }
+                : null,
+        );
+    };
+    const handleListItemContextMenuClose = () => { // TODO: remove this and use it for List Items
+        setListItemContextMenu(null);
+    };
 
     return isLoggedIn
         ? (<Fragment>
-            <Header setDrawerMenuOpen={setDrawerMenuOpen} drawerMenuOpen={drawerMenuOpen}/>
+            <Box onContextMenu={handleListItemContextMenu} sx={{ cursor: 'context-menu' }}> {/* TODO: remove this box and ListItemContextMenu and use it for List Items */}
+                <Header setDrawerMenuOpen={setDrawerMenuOpen} drawerMenuOpen={drawerMenuOpen}/>
+                <ListItemContextMenu id={1} contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose} />
+            </Box>
             <Box
                 sx={{
                     display: 'flex',
