@@ -53,7 +53,7 @@ export default function Main() {
         ? (<Fragment>
             <Box onContextMenu={handleListItemContextMenu} sx={{ cursor: 'context-menu' }}> {/* TODO: remove this box and ListItemContextMenu and use it for List Items */}
                 <Header setDrawerMenuOpen={setDrawerMenuOpen} drawerMenuOpen={drawerMenuOpen}/>
-                <ListItemContextMenu id={1} contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose} />
+                {/*<ListItemContextMenu id={1} contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose}/>*/}
             </Box>
             <Box
                 sx={{

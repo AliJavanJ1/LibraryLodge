@@ -2,7 +2,8 @@ import {Divider, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material
 import {Delete, Edit, Share} from "@mui/icons-material";
 
 
-export default function ListItemContextMenu({id, contextMenu, handleClose}) {
+export default function ListItemContextMenu({contextMenu, handleClose, isFile=false}) {
+    const {open, mouseX, mouseY, id} = contextMenu;
     let handleEdit = () => {
         console.log("id", id, "onEdit") // TODO: open edit dialog
         handleClose()
@@ -20,13 +21,11 @@ export default function ListItemContextMenu({id, contextMenu, handleClose}) {
 
     return (
         <Menu
-            open={contextMenu !== null}
+            open={open}
             onClose={handleClose}
             anchorReference="anchorPosition"
             anchorPosition={
-                contextMenu !== null
-                    ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                    : undefined
+                    { top: mouseY, left: mouseX }
             }
         >
             <MenuItem onClick={handleEdit}>
