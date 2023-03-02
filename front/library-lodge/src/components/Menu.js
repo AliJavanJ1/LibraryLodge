@@ -25,6 +25,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import EditProfileDialog from "./EditProfileDialog";
+import {setSettingDialogOpen} from "../redux/envSlice";
 
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -103,7 +104,7 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
     }
     const handleSettings = () => {
         setDrawerMenuOpen(false);
-        navigate('/settings');
+        dispatch(setSettingDialogOpen(true));
     }
 
     const [profileDialogOpen, setProfileDialogOpen] = useState(false);

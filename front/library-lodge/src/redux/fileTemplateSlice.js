@@ -10,22 +10,27 @@ import FilterNoneOutlinedIcon from '@mui/icons-material/FilterNoneOutlined';
 import MusicNoteOutlinedIcon from '@mui/icons-material/MusicNoteOutlined';
 import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
 
-//thunk for changing specific information of a file template. input is templateId, informationId, and new value. error codes are checked.
-const postInformationEdit = createAsyncThunk(
-    'fileTemplate/postInformationEdit',
-    async (input, thunkAPI) => {
-        const response = await fetch('/api/fileTemplate/informationEdit/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(input),
-        })
-        const data = await response.json()
-        if (data.error) {
-            return thunkAPI.rejectWithValue(data.error)
+const postInformationFieldRemove = createAsyncThunk(
+    'fileTemplate/postInformationFieldRemove',
+    async (input, {
+        rejectWithValue,
+        fulfillWithValue,
+    }) => {
+        try {
+            const response = await fetch('/api/fileTemplate/informationFieldRemove/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(input),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.status)
+            }
+            return fulfillWithValue(await response.json())
+        } catch (e) {
+            return rejectWithValue(e.message)
         }
-        return data
     }
 )
 
@@ -120,5 +125,5 @@ const staticSlice = createSlice({
     reducers: {},
 })
 
-// export const {} = staticSlice.actions
+export {postInformationFieldRemove}
 export default staticSlice.reducer

@@ -3,12 +3,13 @@ import {
     DataGridPro,
 } from '@mui/x-data-grid-pro';
 import {Stack} from "@mui/material";
-import {useMemo} from "react";
+import {useMemo, useState} from "react";
 import {useSelector} from "react-redux";
 import _ from "lodash";
 import {useLocationItems} from "../utils";
 import prettyBytes from 'pretty-bytes';
 import {iconMap} from "../redux/fileTemplateSlice";
+import ListItemContextMenu from "./ListItemContextMenu";
 
 const isFile = (row) => 'size' in row
 
@@ -22,7 +23,7 @@ const NameCell = (props) => {
                 marginRight: '12px',
                 ...(!isFile(props.row) &&
                     {
-                        color: 'orange'
+                        color: 'primary.main'
                     })
             }}>
                 {iconMap[icon].type.render()}
@@ -103,6 +104,7 @@ const getRows = (currFiles, currLibs, file_details, library_details, file_templa
     return _.concat(lib_rows, file_rows)
 }
 
+
 const ItemList = () => {
     const {libs: currLibs, files: currFiles} = useLocationItems()
     const location = useSelector(state => state.env.location)
@@ -118,6 +120,31 @@ const ItemList = () => {
     let rows = useMemo(
         () => getRows(currFiles, currLibs, file_details, library_details, file_templates),
         [currFiles, currLibs, file_details, library_details])
+
+    const initialListItemContextMenu = {
+        open: false,
+        mouseX: null,
+        mouseY: null,
+        id: null,
+    }
+    const [listItemContextMenu, setListItemContextMenu] = useState(initialListItemContextMenu);
+    const handleListItemContextMenu = (event) => {
+        console.log(event)
+        event.preventDefault();
+        setListItemContextMenu(
+            !listItemContextMenu.open
+                ? {
+                    mouseX: event.clientX + 2,
+                    mouseY: event.clientY - 6,
+                    open: true,
+                    id: 1,
+                }
+                : initialListItemContextMenu,
+        );
+    };
+    const handleListItemContextMenuClose = () => {
+        setListItemContextMenu(initialListItemContextMenu);
+    };
 
 
     return (
@@ -139,7 +166,14 @@ const ItemList = () => {
                 disableColumnReorder
                 hideFooter
                 disableColumnMenu
+
+                componentsProps={{
+                    row: {
+                        onContextMenu: handleListItemContextMenu
+                    },
+                }}
             />
+            <ListItemContextMenu contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose} />
         </Stack>
     );
 }
