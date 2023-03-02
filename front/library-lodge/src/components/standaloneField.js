@@ -68,7 +68,6 @@ function StandaloneField({value, onEdit, onRemove, ...props}) {
     const [editMode, setEditMode] = useState(false);
     const [sureMode, setSureMode] = useState(false);
     const [alert, setAlert] = useState({});
-    console.log('rendered')
 
     const initialValue = useMemo(() => ({
         value: value
