@@ -84,6 +84,8 @@ const FileTemplateEdit = (props) => {
         <Stack direction={'row'} spacing={3} sx={{
             width: '100%',
             height: '100%',
+            pt: 2,
+            boxSizing: 'border-box'
         }}>
             <Stack direction={'column'} spacing={2} sx={{
                 width: '50%',
