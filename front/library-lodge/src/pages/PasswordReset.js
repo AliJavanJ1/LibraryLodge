@@ -1,18 +1,18 @@
-import React, {useState} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {signUp, fetchProfileData} from "../redux/profileSlice";
-import {useNavigate, Link as RouterLink} from "react-router-dom";
 import {useFormik} from "formik";
 import * as Yup from "yup";
+import {useDispatch} from "react-redux";
+import {fetchProfileData, resetPassword} from "../redux/profileSlice";
+import {Link as RouterLink, useNavigate, useParams} from "react-router-dom";
+import Alert from "../components/Alert";
+import React, {useState} from "react";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import Alert from "../components/Alert";
-import {useEffectOnce} from "react-use";
+
 
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(16),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -26,33 +26,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SignUp = () => {
-    const classes = useStyles();
+function PasswordReset() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [error, setError] = useState(null);
-    const profile = useSelector((state) => state.profile);
-
-    useEffectOnce(() => {
-        if (!profile) {
-            // navigate('/'); // TODO: redirect to dashboard
-        }
-    });
+    const token = useParams().token;
+    const classes = useStyles();
 
     const formik = useFormik({
         validateOnMount: true,
         initialValues: {
-            username: '',
-            email: '',
             password: '',
             password_confirmation: '',
         },
         validationSchema: Yup.object({
-            username: Yup.string()
-                .required('Required'),
-            email: Yup.string()
-                .email('Invalid email address')
-                .required('Required'),
             password: Yup.string()
                 .required('Required'),
             password_confirmation: Yup.string()
@@ -60,10 +47,12 @@ const SignUp = () => {
                 .oneOf([Yup.ref('password'), null], 'Passwords must match'),
         }),
         onSubmit: values => {
-            dispatch(signUp(values))
+            const result = { ...values, token: token }
+            delete result.password_confirmation;
+            dispatch(resetPassword(values))
                 .then((res) => {
                     if (res.payload && res.payload.status === 200) {
-                        // dispatch(fetchProfileData()) // TODO: should we fetch profile data after sign up?
+                        // dispatch(fetchProfileData()) // // TODO: should we fetch profile data after reset password?
                         navigate('/');
                     } else {
                         setError(res.payload ? res.payload.data : res.error.message);
@@ -78,39 +67,9 @@ const SignUp = () => {
             <CssBaseline/>
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">
-                    Sign Up
+                    Change Password
                 </Typography>
                 <form className={classes.form} onSubmit={formik.handleSubmit}>
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="Username"
-                        name="username"
-                        autoComplete="username"
-                        autoFocus
-                        value={formik.values.username}
-                        onChange={formik.handleChange}
-                        error={formik.touched.username && Boolean(formik.errors.username)}
-                        helperText={formik.touched.username && formik.errors.username}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        autoComplete="email"
-                        autoFocus
-                        value={formik.values.email}
-                        onChange={formik.handleChange}
-                        error={formik.touched.email && Boolean(formik.errors.email)}
-                        helperText={formik.touched.email && formik.errors.email}
-                    />
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -148,12 +107,21 @@ const SignUp = () => {
                         color="primary"
                         className={classes.submit}
                     >
-                        Sign Up
+                        Change Password
                     </Button>
                     <Grid container>
+                        <Grid item xs>
+                            <Link component={RouterLink} to="/login" variant="body2" sx={{
+                                fontSize: 13
+                            }}>
+                                Remember password? Sign In
+                            </Link>
+                        </Grid>
                         <Grid item>
-                            <Link component={RouterLink} to="/login" variant="body2">
-                                {"Already have an account? Sign In"}
+                            <Link component={RouterLink} to='/signup' variant="body2" sx={{
+                                fontSize: 13
+                            }}>
+                                Don't have an account? Sign Up
                             </Link>
                         </Grid>
                     </Grid>
@@ -166,7 +134,7 @@ const SignUp = () => {
             </Box>
             {error && <Alert severity="error" message={error} resetFunc={() => setError(null)}/>}
         </Container>
-    );
+    )
 }
 
-export default SignUp;
+export default PasswordReset;
