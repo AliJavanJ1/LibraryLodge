@@ -150,7 +150,8 @@ const ItemList = () => {
     return (
         <Stack sx={{
             // height: '100%'
-            height: '100vh'
+            height: '100vh',
+            width: '100%',
         }}>
             <DataGridPro
                 rowHeight={48}
