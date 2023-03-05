@@ -84,6 +84,6 @@ def delete_file(request: Request, file_id: int, db=Depends(get_db)):
     return crud.delete_file(file_id, user_id, db)
 
 @router.delete("/delete_library/{library_id}")
-def delete_library(request: Request, library: int, db=Depends(get_db)):
+def delete_library(request: Request, library_id: int, db=Depends(get_db)):
     user_id = validate_user(db, request.headers['session'])
-    return crud.delete_library(library, user_id, db)
+    return crud.delete_library(library_id, user_id, db)
