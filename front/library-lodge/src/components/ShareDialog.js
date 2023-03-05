@@ -10,7 +10,7 @@ import {
     ListItemText, TextField
 } from "@mui/material";
 import {Delete, Person, Close, Done, Add} from "@mui/icons-material";
-import React, {useState} from "react";
+import {useState} from "react";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {fetchProfileData} from "../redux/profileSlice"; // TODO: change to delete and add share
@@ -62,7 +62,7 @@ function ShareDialog({id, open, onClose}) {
                     if (true || res.payload && res.payload.status === 200) { // TODO: change to share
                         setAlert({"severity": "success",
                             "message": "Shared With " + values.username});
-                        setUsers([...users, {id: users[users.length - 1].id + 1, username: values.username}])
+                        setUsers([...users, {id: users.length && users[users.length - 1].id + 1, username: values.username}])
                     } else {
                         setAlert({"severity": "error",
                             "message": res.payload ? res.payload.data : res.error.message});
