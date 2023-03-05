@@ -36,7 +36,7 @@ def login(response: Response, request: Request, user: schemas.UserLogin, db=Depe
 
 @router.post('/logout')
 def logout(response: Response, request: Request, db=Depends(get_db)):
-    user_logout = crud.get_token(db, token=request.headers['session'])
+    user_logout = crud.get_token(db, request.headers['session'])
     if not user_logout:
         raise HTTPException(status_code=400, detail="token not exist!")
     return crud.logout(db, user_logout)
