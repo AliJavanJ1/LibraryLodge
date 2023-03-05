@@ -123,8 +123,8 @@ const ItemList = () => {
 
     const initialListItemContextMenu = {
         open: false,
-        mouseX: null,
-        mouseY: null,
+        mouseX: 0,
+        mouseY: 0,
         id: null,
     }
     const [listItemContextMenu, setListItemContextMenu] = useState(initialListItemContextMenu);
