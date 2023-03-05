@@ -25,7 +25,7 @@ class Library(Base):
     file_template_id = Column(Integer, ForeignKey('file_templates.id'))
     create_date = Column(TIMESTAMP)
     
-class FileTemplates(Base):
+class FileTemplate(Base):
     __tablename__ = "file_templates"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))

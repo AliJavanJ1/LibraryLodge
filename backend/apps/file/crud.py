@@ -21,7 +21,8 @@ def upload_file(db, user_id, file_name, file_type, file_upload_info: schemas.Fil
             type=file_type,
             desc = file_upload_info.desc,
             extra_info = file_upload_info.extra_info,
-            attachments = file_upload_info.attachments
+            attachments = file_upload_info.attachments,
+            file_template_id = file_upload_info.file_template_id
         )
     elif file_type == "ATTACHMENT":
         db_file = models.File(
@@ -63,7 +64,7 @@ def create_library(db: Session, library: schemas.CreateLibrary, user_id: int):
     return db_library.id
 
 def create_file_template(db: Session, fileTemplate: schemas.CreateFileTemplate, user_id: int):
-    db_file_template = models.FileTemplates(
+    db_file_template = models.FileTemplate(
         name = fileTemplate.name,
         user_id = user_id,
         attachments = fileTemplate.attachments,
@@ -74,14 +75,27 @@ def create_file_template(db: Session, fileTemplate: schemas.CreateFileTemplate, 
     db.refresh(db_file_template)
     return db_file_template.id
 
+def get_file_templates(db: Session, user_id: int):
+    file_templates = db.query(models.FileTemplate).filter(models.FileTemplate.user_id == user_id).all()
+    return file_templates
 
-def add_attachment(db: Session, file_id, key, attachment_id):
+def add_file_template_info(db: Session, user_id: int, info: schemas.AddFileTemplateInfo):
+    file_template = db.query(models.FileTemplate).filter(models.FileTemplate.id == attachment_type.file_template_id 
+                                                and models.FileTemplate.user_id == user_id).one()
+    if info.is_attachment_type:
+        file_template.attachments[info.id] = info.name
+        file_template.update({models.FileTemplate.attachments: file_template.attachments})
+    else:
+        file_template.extra_informations[info.id] = info.name
+        file_template.update({models.FileTemplate.extra_informations: file_template.extra_informations})
+    db.commit()
+
+def add_attachment(db: Session, file_id, id, attachment_id):
     file = db.query(models.File).filter(models.File.id == file_id).one()
-    file.attachments[key] = attachment_id
+    file.attachments[id] = attachment_id
     db.query(models.File).filter(models.File.id == file_id).update(
         {models.File.attachments: file.attachments})
     db.commit()
-
 
 def get_file(db: Session, file_id: int, request):
     file = db.query(models.File).filter(models.File.id == file_id).first()
@@ -104,6 +118,7 @@ def get_file(db: Session, file_id: int, request):
             "user_id": user_id
         }
     )
+
 def download_file(file_id: int, db: Session ):
     file = db.query(models.File).filter(models.File.id == file_id).first()
     if not file:
