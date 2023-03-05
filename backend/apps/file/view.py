@@ -24,7 +24,6 @@ def validate_user(db, token):
     return user_id
 
 @router.post("/upload")
-@limiter.limit("150/minute")
 async def upload_file(request: Request, token: str, file: UploadFile, upload_info: schemas.FileUpload, db=Depends(get_db)):
     user_id = validate_user(db, token)
     path = f'{os.getcwd()}/static/{file.filename}'
@@ -37,7 +36,16 @@ async def upload_file(request: Request, token: str, file: UploadFile, upload_inf
 
 # TODO: conventions with frontend
 @router.get("/file/{file_id}", response_class=HTMLResponse)
-@limiter.limit("150/minute") 
 def get_file(request: Request, token: str, file_id: int, db=Depends(get_db)):
     validate_user(db, token)
     return crud.get_file(db, file_id, request)
+
+@router.post("/create/library")
+def create_Library(request: Request, token: str, library: schemas.CreateLibrary, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    return crud.create_library(db, library, user_id)
+    
+@router.post("/create/file-template")
+def create_file_template(request: Request, token: str, fileTemplate: schemas.CreateFileTemplate, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    return crud.create_file_template(db, fileTemplate, user_id)
