@@ -26,6 +26,7 @@ import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import EditProfileDialog from "./EditProfileDialog";
 import {setSettingDialogOpen} from "../redux/envSlice";
+import PlayerDialog from "./PlayerDialog";
 
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -81,6 +82,7 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
     const [error, setError] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [playerDialogOpen, setPlayerDialogOpen] = useState(false); // TODO: this line should be deleted
 
     const [anchorEl, setAnchorEl] = useState(null);
     const  newMenuOpen = Boolean(anchorEl)
@@ -204,9 +206,11 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
             </DrawerHeader>
             <Divider />
             <List>
+                {/* TODO: the Video button should be deleted from the list */}
                 {[{"text": "Home", "icon": <HomeIcon />, "onClickHandler": handleHome},
                   {"text": "Profile", "icon": <ProfileIcon />, "onClickHandler": handleProfile},
-                  {"text": "Settings", "icon": <SettingsIcon />, "onClickHandler": handleSettings}].map(({text, icon, onClickHandler}) => (
+                  {"text": "Settings", "icon": <SettingsIcon />, "onClickHandler": handleSettings},
+                  {"text": "Video", "icon": <HomeIcon />, "onClickHandler": () => setPlayerDialogOpen(true)}].map(({text, icon, onClickHandler}) => (
                     <ListItem key={text} disablePadding>
                         <ListItemButton onClick={onClickHandler}>
                             <ListItemIcon>
@@ -231,6 +235,7 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
             {profileDialogOpen
              && <EditProfileDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)}/>}
             {error && <Alert severity="error" message={error} resetFunc={() => setError(null)}/>}
+            {playerDialogOpen && <PlayerDialog url={null} open={playerDialogOpen} onClose={() => setPlayerDialogOpen(false)}/>} {/* TODO: should be deleted */}
         </Drawer>
     )
 }

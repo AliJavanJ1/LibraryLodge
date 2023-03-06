@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class RegisterUser(BaseModel):
     username: str
     password: str
-    name: str
+    email: str
 
 
 class UserLogin(BaseModel):

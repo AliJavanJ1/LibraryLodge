@@ -1,4 +1,4 @@
-import {AppBar as MuiAppBar, Toolbar, SvgIcon, Link, Box, InputBase, styled} from "@mui/material";
+import {AppBar as MuiAppBar, Toolbar, SvgIcon, Link, styled, Button, Typography} from "@mui/material";
 import {ReactComponent as logo} from "../assets/drive.svg";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -11,6 +11,7 @@ import {useDispatch} from "react-redux";
 import {useState} from "react";
 import Alert from "./Alert";
 import {setSettingDialogOpen} from "../redux/envSlice";
+import SearchDialog from "./SearchDialog";
 
 const AppBar = styled(MuiAppBar, {
     shouldForwardProp: (prop) => prop !== 'menuOpen',
@@ -33,6 +34,7 @@ export default function Header({ setDrawerMenuOpen, drawerMenuOpen }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [error, setError] = useState(null);
+    const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
     const handleLogout = () => {
         dispatch(logout()).then((res) => {
@@ -87,12 +89,12 @@ export default function Header({ setDrawerMenuOpen, drawerMenuOpen }) {
                     }}/>
                     Library Lodge
                 </Link>
-                <Box
+                <Button
                     variant="outlined"
                     size="large"
                     sx={{
                         borderRadius: "12px",
-                        width: "400px",
+                        width: "350px",
                         height: "40px",
                         backgroundColor: "white",
                         transition: "background-color 0.2s ease-in-out",
@@ -103,9 +105,9 @@ export default function Header({ setDrawerMenuOpen, drawerMenuOpen }) {
                             backgroundColor: "rgba(255, 255, 255, 0.8)",
                         }
                     }}
+                    onClick={() => setSearchDialogOpen(true)}
                 >
                     <SearchIcon sx={{
-                        ml: 2,
                         color: "primary.main",
                         fontSize: "30px",
                         marginRight: "10px",
@@ -114,10 +116,16 @@ export default function Header({ setDrawerMenuOpen, drawerMenuOpen }) {
                             transform: "rotate(45deg) scale(1.1)",
                         }
                     }}/>
-                    <InputBase
-                        placeholder="Search..."
-                    />
-                </Box>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            textTransform: "none",
+                        }}
+                    >
+                        Search...
+                    </Typography>
+                </Button>
+                {searchDialogOpen && <SearchDialog open={searchDialogOpen} onClose={() => setSearchDialogOpen(false)} />}
                 <IconButton
                     size="large"
                     edge="start"

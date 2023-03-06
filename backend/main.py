@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import uvicorn
 from apps.account import models as account_models, view as account_view
 from apps.file import models as file_models, view as file_view
