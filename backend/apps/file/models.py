@@ -8,9 +8,10 @@ class File(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
+    type = Column(String)
     name = Column(String)
     desc = Column(String)
-    last_modified = Column(TIMESTAMP)
+    create_date = Column(TIMESTAMP)
     extra_info = Column(JSON)
     attachments = Column(JSON)
     file_template_id = Column(Integer, ForeignKey('file_templates.id'))
@@ -22,7 +23,6 @@ class Library(Base):
     name = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'))
     file_template_id = Column(Integer, ForeignKey('file_templates.id'))
-    accepted_file = Column(ARRAY(String))
     
 class FileTemplates(Base):
     __tablename__ = "file_templates"

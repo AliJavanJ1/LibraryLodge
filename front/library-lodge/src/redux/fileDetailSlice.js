@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const dummy = {
     1: {
-        name: 'Asking for a Friend',
+        name: 'Asking for a Friend dddddddddddddddddddddd',
         library: 1,
         last_modified: '2021-01-01T00:00:00Z',
         file_template: 1,
@@ -16,10 +16,12 @@ const dummy = {
             1: {
                 id: 42141,
                 size: 12345,
+                name: 'Asking for a Friend.png',
             },
             2: {
                 id: 42142,
                 size: 12345,
+                name: 'Asking for a Friend.txt',
             },
         }
     },
@@ -50,10 +52,12 @@ const dummy = {
             1: {
                 id: 42143,
                 size: 12345,
+                name: 'The Hunger Games.png'
             },
             2: {
                 id: 42144,
                 size: 12345,
+                name: 'The Hunger Games.txt'
             },
         }
     },
@@ -91,6 +95,25 @@ const dummy = {
             1: 'Vincent van Gogh',
             2: '1889',
             3: 'Saint-Rémy-de-Provence',
+        }
+    },
+    7: {
+        name: 'Titanic',
+        library: null,
+        size: 1200000345,
+        last_modified: '2022-01-01T00:00:00Z',
+        file_template: 2,
+        information: {
+            1: 'James Cameron',
+            2: '1997',
+            3: 'Romance',
+        },
+        attachments: {
+            1: {
+                id: 42145,
+                size: 12345,
+                name: 'Titanic.srt'
+            }
         }
     }
 }

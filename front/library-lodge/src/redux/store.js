@@ -29,6 +29,7 @@ import envSlice from "./envSlice";
                 'name': {
                     id: 'id',
                     size: 'size',
+                    name: 'filename',
                 },
             },
         },
