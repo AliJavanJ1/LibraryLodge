@@ -40,6 +40,7 @@ def get_token(db: Session, token: str):
     return db.query(models.UserLoginToken).filter(models.UserLoginToken.token == token).first()
 
 def login(db: Session, user_id: int):
+    
     db_user_login = db.query(models.UserLoginToken).filter(models.UserLoginToken.user_id == user_id).first()
     if db_user_login:
         return db_user_login.token
