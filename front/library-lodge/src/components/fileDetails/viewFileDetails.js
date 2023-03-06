@@ -6,6 +6,7 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import _ from "lodash";
 import prettyBytes from "pretty-bytes";
 import {setFileDetail} from "../../redux/envSlice";
+import PlayerDialog from "../PlayerDialog";
 
 export const InformationField = ({label, value}) => {
     return (
@@ -71,7 +72,7 @@ const AttachmentField = ({label, attachment}) => {
                 </Typography>
             </Tooltip>
             <Tooltip title={attachment.name} placement={'right'} arrow>
-                <IconButton size={'small'} onClick={()=>{
+                <IconButton size={'small'} onClick={() => {
                     //todo: download attachment
                 }}>
                     <FileDownloadOutlinedIcon/>
@@ -87,6 +88,7 @@ const ViewFileDetails = ({fileId, setEditing}) => {
     const fileTemplate = useSelector(store => store.file_templates[file.file_template])
     const library = useSelector(store => store.library_details[file.library])
     const dispatch = useDispatch()
+    const [playerDialogOpen, setPlayerDialogOpen] = useState(false);
 
     return (
         <Paper elevation={5} sx={{
@@ -141,7 +143,7 @@ const ViewFileDetails = ({fileId, setEditing}) => {
                                 <IconButton sx={{
                                     mx: 1,
                                     color: 'white'
-                                }} onClick={()=>{
+                                }} onClick={() => {
                                     // todo: download file
                                 }}>
                                     <FileDownloadOutlinedIcon/>
@@ -219,19 +221,29 @@ const ViewFileDetails = ({fileId, setEditing}) => {
                     justifyContent: 'flex-end',
                     mt: 'auto'
                 }}>
+                    {
+                        fileTemplate.name === 'Movie' &&
+                        <Button variant={'outlined'} size={'small'} onClick={() => {
+                            setPlayerDialogOpen(true)
+                        }
+                        }>
+                            Preview
+                        </Button>
+                    }
                     <Button variant={'outlined'} size={'small'} onClick={() => {
                         dispatch(setFileDetail('closed'))
                     }
                     }>
                         Close
                     </Button>
-                    <Button variant={'outlined'} size={'small'} onClick={()=> {
+                    <Button variant={'outlined'} size={'small'} onClick={() => {
                         setEditing(true)
                     }}>
                         Edit
                     </Button>
                 </Stack>
             </Stack>
+            {playerDialogOpen && <PlayerDialog url={null} open={playerDialogOpen} onClose={() => setPlayerDialogOpen(false)}/>}
         </Paper>
     );
 }
