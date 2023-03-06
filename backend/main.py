@@ -5,11 +5,24 @@ from apps.file import models as file_models, view as file_view
 from services.sql_app.database import engine
 from fastapi.staticfiles import StaticFiles
 from starlette_validation_uploadfile import ValidateUploadFileMiddleware
+# from fastapi.middleware.cors import CORSMiddleware
 
 account_models.Base.metadata.create_all(bind=engine)
 file_models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# origins = [
+#     "*"
+# ]
+#
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 
 app.include_router(account_view.router)
