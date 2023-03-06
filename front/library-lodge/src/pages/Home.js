@@ -4,9 +4,12 @@ import {Box, Container, Stack, InputBase} from "@mui/material";
 import FileDetails from "../components/fileDetails/fileDetails";
 import BreadCrumbs from "../components/Breadcrumbs";
 import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {setQuickFilterInput} from "../redux/envSlice";
 
-const Dashboard = () => {
-    const [localSearch, setLocalSearch] = useState('');
+const Home = () => {
+    const dispatch = useDispatch()
+    const quickFilterInput = useSelector(state => state.env.quickFilterInput)
     
     const data = [
         {id: 1, name: 'MusicNoteOutlinedIcon', link: '#', type: 'MusicNoteOutlinedIcon'},
@@ -24,35 +27,37 @@ const Dashboard = () => {
 
     return (
         <Container maxWidth='xl'>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                }}
-            >
-                <BreadCrumbs data={data} />
-                <InputBase
-                    placeholder="Filter..."
-                    type="search"
-                    sx={{
-                        width: 300,
-                        height: 30,
-                        fontSize: 14,
-                        border: "1px solid #ccc",
-                        padding: "2px 10px",
-                        borderRadius: 1,
-                        marginBottom: 1
-                    }}
-                    value={localSearch}
-                    onChange={e => setLocalSearch(e.target.value)}
-                />
-            </Box>
             <Stack direction={'row'} spacing={2}>
                 <Box sx={{
                     flex: 4,
-                    height: 'calc(100vh - 120px)',
+                    height: 'calc(100vh - 160px)',
                 }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <BreadCrumbs data={data} />
+                        <InputBase
+                            placeholder="Filter..."
+                            type="search"
+                            sx={{
+                                width: 300,
+                                height: 30,
+                                fontSize: 14,
+                                border: "1px solid #ccc",
+                                padding: "2px 10px",
+                                borderRadius: 1,
+                                marginBottom: 1
+                            }}
+                            value={quickFilterInput}
+                            onChange={e => {
+                                dispatch(setQuickFilterInput(e.target.value))
+                            }}
+                        />
+                    </Box>
                     <ItemList/>
                 </Box>
                 {/*<FileDialogTest/>*/}
@@ -62,4 +67,4 @@ const Dashboard = () => {
     );
 }
 
-export default Dashboard;
+export default Home;
