@@ -5,6 +5,7 @@ from sqlalchemy import desc
 from fastapi.templating import Jinja2Templates
 from uuid import uuid4
 from fastapi.responses import FileResponse
+import os
 
 from . import models, schemas
 
@@ -90,10 +91,11 @@ def download_file(file_id: int, db: Session ):
     if not file:
         raise HTTPException(status_code=404, detail="File not found")
 
-    return FileResponse(file.path, filename=file.name)
+    path = f'{os.getcwd()}/static/{file.name}'
+    return FileResponse(path, filename=file.name)
 
-def get_files(db: Session):
-    files = db.query(models.File).all()
+def get_files(db: Session, user_id: int):
+    files = db.query(models.File).filter(models.File.user_id == user_id).all()
     return files
 
 def delete_file(file_id: int, db: Session):
