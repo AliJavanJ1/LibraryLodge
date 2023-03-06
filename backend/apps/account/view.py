@@ -1,7 +1,7 @@
 import aiofiles
 import os
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, Request
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, Request, Response
 from slowapi.util import get_remote_address
 from fastapi.responses import HTMLResponse
 from services.sql_app.database import get_db
@@ -27,20 +27,21 @@ def register(request: Request, user: schemas.RegisterUser, db=Depends(get_db)):
     
 
 @router.post('/login')
-def login(request: Request, user: schemas.UserLogin, db=Depends(get_db)):
+def login(response: Response, request: Request, user: schemas.UserLogin, db=Depends(get_db)):
     user_login = crud.get_user(db, username=user.username, password=user.password)
     if not user_login:
         raise HTTPException(status_code=400, detail="usename or password is incorrect")
-    return crud.login(db, user_login.id)
+    token = crud.login(db, user_login.id)
+    response.headers['session'] = token
 
 @router.post('/logout')
-def logout(request: Request, user: schemas.UserLogout, db=Depends(get_db)):
-    user_logout = crud.get_token(db, token=user.token)
+def logout(response: Response, request: Request, db=Depends(get_db)):
+    user_logout = crud.get_token(db, token=request.headers['session'])
     if not user_logout:
         raise HTTPException(status_code=400, detail="token not exist!")
     return crud.logout(db, user_logout)
 
 @router.get('/profile')
-def getProfile(request: Request, token: str, db=Depends(get_db)):
-    user_id = validate_user(db, token)
+def getProfile(request: Request, db=Depends(get_db)):
+    user_id = validate_user(db, request.headers['session'])
     return crud.get_profile(user_id)
