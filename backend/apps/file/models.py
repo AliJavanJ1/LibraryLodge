@@ -7,7 +7,7 @@ class File(Base):
     __tablename__ = "files"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey('users.id'))
     name = Column(String)
     desc = Column(String)
     last_modified = Column(TIMESTAMP)
@@ -20,7 +20,7 @@ class Library(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey('users.id'))
     file_template_id = Column(Integer, ForeignKey('file_templates.id'))
     accepted_file = Column(ARRAY(String))
     
@@ -35,6 +35,6 @@ class FileTemplates(Base):
 class FileLibrary(Base):
     __tablename__ = "filelibraries"
     id = Column(Integer, primary_key=True, index=True)
-    file_id = Column(Integer, ForeignKey("files.id"))
-    lib_id = Column(Integer, ForeignKey("libraries.id"))
+    file_id = Column(Integer, ForeignKey('files.id'))
+    lib_id = Column(Integer, ForeignKey('libraries.id'))
 

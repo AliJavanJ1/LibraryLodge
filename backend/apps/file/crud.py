@@ -10,6 +10,7 @@ from . import models, schemas
 
 templates = Jinja2Templates(directory="templates")
 
+
 def upload_file(db, user_id, file_name, file_upload_info: schemas.FileUpload):
     db_file = models.File(
         user_id=user_id,
@@ -18,10 +19,26 @@ def upload_file(db, user_id, file_name, file_upload_info: schemas.FileUpload):
         extra_info = file_upload_info.extra_info,
         attachments = file_upload_info.attachments
     )
+
     db.add(db_file)
     db.commit()
     db.refresh(db_file)
+
+    if not file_upload_info.library_id is None:
+        save_library_file_relation(db, db_file.id, file_upload_info.library_id)
+
     return db_file.id
+
+def save_library_file_relation(db: Session, file_id: int, library_id: int):
+    db_file_lib_relation = models.FileLibrary(
+        file_id = file_id,
+        lib_id = library_id
+    )
+    db.add(db_file_lib_relation)
+    db.commit()
+    db.refresh(db_file_lib_relation)
+    
+
 
 def create_library(db: Session, library: schemas.CreateLibrary, user_id: int):
     db_library = models.Library(
@@ -47,6 +64,7 @@ def create_file_template(db: Session, fileTemplate: schemas.CreateFileTemplate, 
     db.refresh(db_file_template)
     return db_file_template.id
 
+
 def get_file(db: Session, file_id: int, request):
     file = db.query(models.File).filter(models.File.id == file_id).first()
     if not file:
@@ -68,7 +86,6 @@ def get_file(db: Session, file_id: int, request):
             "user_id": user_id
         }
     )
-
 def download_file(file_id: int, db: Session ):
     file = db.query(models.File).filter(models.File.id == file_id).first()
     if not file:

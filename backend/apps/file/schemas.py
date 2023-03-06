@@ -6,6 +6,7 @@ class FileUpload(BaseModel):
     desc: Optional[str]
     extra_info: dict
     attachments: dict
+    library_id: Optional[int]
 
     @classmethod
     def __get_validators__(cls):

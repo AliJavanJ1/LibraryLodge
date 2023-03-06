@@ -9,13 +9,11 @@ from services.sql_app.database import get_db
 from . import schemas, crud, models
 from ..account import crud as user_crud
 
-
 router = APIRouter(
     prefix='/dashboard',
     tags=['dashboard']
 )
 limiter = Limiter(key_func=get_remote_address)
-
 
 def validate_user(db, token):
     if not user_crud.is_user(db, token):
@@ -34,6 +32,7 @@ async def upload_file(request: Request, token: str, file: UploadFile, upload_inf
     crud.upload_file(db, user_id, file_path, upload_info)
     return f'file {file.filename} uploaded!'
 
+# TODO: conventions with frontend
 @router.get("/file/{file_id}", response_class=HTMLResponse)
 def get_file(request: Request, token: str, file_id: int, db=Depends(get_db)):
     validate_user(db, token)
@@ -58,6 +57,7 @@ def download_file(file_id: int, token: str, db=Depends(get_db)):
 def gets_all_files(token: str, db=Depends(get_db)):
     validate_user(db, token)
     return crud.get_files(db)
+
 @router.delete("/delete_file/{file_id}")
 def delete_file(file_id: int, token: str, db=Depends(get_db)):
     validate_user(db, token)
