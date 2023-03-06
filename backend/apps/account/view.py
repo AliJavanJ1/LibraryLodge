@@ -32,7 +32,7 @@ def login(response: Response, request: Request, user: schemas.UserLogin, db=Depe
     if not user_login:
         raise HTTPException(status_code=400, detail="usename or password is incorrect")
     token = crud.login(db, user_login.id)
-    response.headers['session'] = token
+    response.set_cookie(key='session', value=token)
 
 @router.post('/logout')
 def logout(response: Response, request: Request, db=Depends(get_db)):
