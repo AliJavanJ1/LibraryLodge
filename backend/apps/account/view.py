@@ -41,6 +41,7 @@ def logout(response: Response, request: Request, db=Depends(get_db)):
         raise HTTPException(status_code=400, detail="token not exist!")
     return crud.logout(db, user_logout)
 
+
 @router.get('/profile')
 def getProfile(request: Request, db=Depends(get_db)):
     user_id = validate_user(db, request.headers['session'])
