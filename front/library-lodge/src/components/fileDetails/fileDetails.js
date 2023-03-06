@@ -5,8 +5,8 @@ import ViewFileDetails from "./viewFileDetails";
 
 
 const FileDetails = () => {
-    const [editing, setEditing] = useState(false);
     const fileDetailStatus = useSelector(store => store.env.fileDetail)
+    const [editing, setEditing] = useState(fileDetailStatus === -1)
 
     switch (fileDetailStatus) {
         case 'closed':

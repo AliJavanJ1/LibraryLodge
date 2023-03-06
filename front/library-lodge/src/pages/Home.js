@@ -27,37 +27,37 @@ const Home = () => {
 
     return (
         <Container maxWidth='xl'>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                }}
-            >
-                <BreadCrumbs data={data} />
-                <InputBase
-                    placeholder="Filter..."
-                    type="search"
-                    sx={{
-                        width: 300,
-                        height: 30,
-                        fontSize: 14,
-                        border: "1px solid #ccc",
-                        padding: "2px 10px",
-                        borderRadius: 1,
-                        marginBottom: 1
-                    }}
-                    value={quickFilterInput}
-                    onChange={e => {
-                        dispatch(setQuickFilterInput(e.target.value))
-                    }}
-                />
-            </Box>
             <Stack direction={'row'} spacing={2}>
                 <Box sx={{
                     flex: 4,
                     height: 'calc(100vh - 160px)',
                 }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <BreadCrumbs data={data} />
+                        <InputBase
+                            placeholder="Filter..."
+                            type="search"
+                            sx={{
+                                width: 300,
+                                height: 30,
+                                fontSize: 14,
+                                border: "1px solid #ccc",
+                                padding: "2px 10px",
+                                borderRadius: 1,
+                                marginBottom: 1
+                            }}
+                            value={quickFilterInput}
+                            onChange={e => {
+                                dispatch(setQuickFilterInput(e.target.value))
+                            }}
+                        />
+                    </Box>
                     <ItemList/>
                 </Box>
                 {/*<FileDialogTest/>*/}

@@ -191,7 +191,7 @@ const EditingFileDetails = ({fileId, setEditting}) => {
     return (
         <Paper elevation={5} sx={{
             flex: 1,
-            height: 'calc(100vh - 160px)',
+            height: 'calc(100vh - 120px)',
         }}>
             <Stack sx={{
                 height: '100%'
@@ -202,6 +202,7 @@ const EditingFileDetails = ({fileId, setEditting}) => {
                     mx: 1,
                     py: 1,
                     borderRadius: 2,
+                    width: '305px'
                 }}>
                     <Stack sx={{
                         alignItems: 'center',
@@ -257,7 +258,7 @@ const EditingFileDetails = ({fileId, setEditting}) => {
                                 <Tooltip title={formik.values.name} placement={'top'} arrow enterDelay={500}
                                          enterNextDelay={500}>
                                     <Typography variant={'body2'} sx={{
-                                        width: '25ch',
+                                        width: '22ch',
                                         overflow: 'hidden',
                                         textOverflow: 'ellipsis',
                                         whiteSpace: 'nowrap',
