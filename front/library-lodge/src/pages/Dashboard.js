@@ -51,7 +51,7 @@ const Dashboard = () => {
             <Stack direction={'row'} spacing={2}>
                 <Box sx={{
                     flex: 4,
-                    height: 'calc(100vh - 120px)',
+                    height: 'calc(100vh - 160px)',
                 }}>
                     <ItemList/>
                 </Box>
