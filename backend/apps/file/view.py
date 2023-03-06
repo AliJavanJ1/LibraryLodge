@@ -47,6 +47,12 @@ def get_file(request: Request, token: str, file_id: int, db=Depends(get_db)):
     validate_user(db, token)
     return crud.get_file(db, file_id, request)
 
+@router.get("/library/{library_id}", response_class=HTMLResponse)
+def get_library(request: Request, token: str, library_id: int, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    return crud.get_library(db, user_id, library_id)
+
+
 @router.post("/create/library")
 def create_Library(request: Request, token: str, library: schemas.CreateLibrary, db=Depends(get_db)):
     user_id = validate_user(db, token)
@@ -67,7 +73,17 @@ def gets_all_files(token: str, db=Depends(get_db)):
     user_id = validate_user(db, token)
     return crud.get_files(db, user_id)
 
+@router.get("/all_libraries")
+def get_all_libraries(token: str, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    return crud.get_all_libraries(db, user_id)
+
 @router.delete("/delete_file/{file_id}")
 def delete_file(file_id: int, token: str, db=Depends(get_db)):
-    validate_user(db, token)
-    return crud.delete_file(file_id, db)
+    user_id = validate_user(db, token)
+    return crud.delete_file(file_id, user_id, db)
+
+@router.delete("/delete_library/{library_id}")
+def delete_library(library: int, token: str, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    return crud.delete_library(library, user_id, db)

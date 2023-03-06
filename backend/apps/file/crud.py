@@ -116,11 +116,43 @@ def get_files(db: Session, user_id: int):
     files = db.query(models.File).filter(models.File.user_id == user_id).all()
     return files
 
-def delete_file(file_id: int, db: Session):
-    file = db.query(models.File).filter(models.File.id == file_id).first()
+def get_library(db: Session, user_id: int, library_id: int, request):
+    library = db.query(models.Library).filter(models.Library.id == library_id and models.Library.user_id == user_id).first()
+    if not library:
+        raise HTTPException(status_code=404, detail="File not found")
+
+    file_template_id = library.file_template_id
+    name = library.name
+    createDate = library.create_date
+
+    return templates.TemplateResponse(
+        "page.html",
+        {
+            "request": request,
+            "name": name,
+            "file_template_id": file_template_id,
+            "created_at": createDate
+        }
+    )
+
+def get_all_libraries(db: Session, user_id: int):
+    libraries = db.query(models.Library).filter(models.Library.user_id == user_id).all()
+    return libraries
+
+
+def delete_file(file_id: int, user_id: int, db: Session):
+    file = db.query(models.File).filter(models.File.id == file_id and models.Library.user_id == user_id).first()
     if not file:
         raise HTTPException(status_code=404, detail="File not found")
     db.delete(file)
     db.commit()
     return {"message": "File deleted successfully."}
+
+def delete_library(library_id: int, user_id: int, db: Session):
+    library = db.query(models.Library).filter(models.Library.id == library_id and models.Library.user_id == user_id).first()
+    if not library:
+        raise HTTPException(status_code=404, detail="library not found")
+    db.delete(library)
+    db.commit()
+    return {"message": "library deleted successfully."}
 
