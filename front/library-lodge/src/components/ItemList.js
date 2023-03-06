@@ -1,9 +1,9 @@
 import * as React from 'react';
 import {
-    DataGridPro,
+    DataGridPro, useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import {Stack} from "@mui/material";
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useSelector} from "react-redux";
 import _ from "lodash";
 import {useLocationItems} from "../utils";
@@ -114,6 +114,13 @@ const ItemList = () => {
     const file_templates = useSelector(state => state.file_templates)
     const file_template = library_detail ? file_templates[library_detail.file_template] : null
     const file_details = useSelector(state => state.file_details)
+    const apiRef = useGridApiRef()
+    const quickFilterInput = useSelector(state => state.env.quickFilterInput)
+
+    useEffect(() => {
+        let words = quickFilterInput.split(' ').filter(word => word !== '')
+        apiRef.current.setQuickFilterValues(words)
+    }, [apiRef.current, quickFilterInput]);
 
     let columns = useMemo(
         () => getColumns(file_template),
@@ -130,7 +137,6 @@ const ItemList = () => {
     }
     const [listItemContextMenu, setListItemContextMenu] = useState(initialListItemContextMenu);
     const handleListItemContextMenu = (event) => {
-        console.log(event)
         event.preventDefault();
         setListItemContextMenu(
             !listItemContextMenu.open
@@ -148,6 +154,7 @@ const ItemList = () => {
     };
 
 
+
     return (
         <Stack sx={{
             height: '100%',
@@ -155,6 +162,7 @@ const ItemList = () => {
         }}>
             <Scrollbars>
                 <DataGridPro
+                    apiRef={apiRef}
                     rowHeight={48}
                     headerHeight={38}
 
