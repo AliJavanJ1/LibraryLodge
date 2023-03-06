@@ -12,14 +12,19 @@ router = APIRouter(
     tags=['account']
 )
 
+def validate_user(db, token):
+    if not crud.is_user(db, token):
+        raise HTTPException(status_code=401, detail="for upload video, login first")
+    user_id = crud.get_token(db, token).user_id
+    return user_id
 
 @router.post('/signup')
 def register(request: Request, user: schemas.RegisterUser, db=Depends(get_db)):
-    user_db = crud.get_user(db, user.username)
+    user_db = crud.get_user_by_username(db, user.username)
     if user_db:
         raise HTTPException(status_code=400, detail="exist user with this username")
-    crud.create_user(db, user)
-    return 'user created'
+    return crud.create_user(db, user)
+    
 
 @router.post('/login')
 def login(request: Request, user: schemas.UserLogin, db=Depends(get_db)):
@@ -34,3 +39,8 @@ def logout(request: Request, user: schemas.UserLogout, db=Depends(get_db)):
     if not user_logout:
         raise HTTPException(status_code=400, detail="token not exist!")
     return crud.logout(db, user_logout)
+
+@router.get('/profile')
+def getProfile(request: Request, token: str, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    return crud.get_profile(user_id)

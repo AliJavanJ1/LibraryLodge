@@ -33,7 +33,7 @@ const login = createAsyncThunk(
 const signUp = createAsyncThunk(
     'profile/signUp',
     async (arg) => {
-        return await fetch(staticIS.apiDomain + '/signUp/', {
+        return await fetch(staticIS.apiDomain + '/signup/', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -68,6 +68,34 @@ const editProfile = createAsyncThunk(
     }
 )
 
+const requestPasswordReset = createAsyncThunk(
+    'profile/requestPasswordReset',
+    async (arg) => {
+        return await fetch(staticIS.apiDomain + '/reset-password/', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(arg),
+        }).then(response => response.json())
+    }
+)
+
+const resetPassword = createAsyncThunk(
+    'profile/resetPassword',
+    async (arg) => {
+        return await fetch(staticIS.apiDomain + '/reset-password/', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(arg),
+        }).then(response => response.json())
+    }
+)
+
 const initialState = {
     ...dummy,
 }
@@ -92,11 +120,15 @@ const staticSlice = createSlice({
             state = action.payload
             return state
         })
-        builder.addCase(logout.fulfilled, (state, action) => {
+        builder.addCase(logout.fulfilled, (state, action) => { // TODO: should I delete action input?
             state = null
             return state
         })
         builder.addCase(editProfile.fulfilled, (state, action) => {
+            state = action.payload
+            return state
+        })
+        builder.addCase(resetPassword.fulfilled, (state, action) => {
             state = action.payload
             return state
         })
@@ -105,4 +137,4 @@ const staticSlice = createSlice({
 
 export const {} = staticSlice.actions
 export default staticSlice.reducer
-export {fetchProfileData, login, signUp, logout, editProfile}
+export {fetchProfileData, login, signUp, logout, editProfile, requestPasswordReset, resetPassword}
