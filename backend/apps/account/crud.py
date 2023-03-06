@@ -15,6 +15,7 @@ def is_user(db: Session, token: str):
     
 def create_user(db: Session, user: schemas.RegisterUser):
     db_user = models.User(
+        id=uuid4(),
         username=user.username,
         password=user.password,
         email = user.email,
