@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
+import {signUp, fetchProfileData} from "../redux/profileSlice";
 import {useNavigate, Link as RouterLink} from "react-router-dom";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
-import {fetchProfileData, login} from "../redux/profileSlice";
 import {makeStyles} from "@mui/styles";
 import Alert from "../components/Alert";
 import {useEffectOnce} from "react-use";
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Login = () => {
+const SignUp = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -34,35 +34,45 @@ const Login = () => {
     const profile = useSelector((state) => state.profile);
 
     useEffectOnce(() => {
-        if (profile) {
+        if (!profile) {
             // navigate('/'); // TODO: redirect to dashboard
         }
     });
-
-
 
     const formik = useFormik({
         validateOnMount: true,
         initialValues: {
             username: '',
+            email: '',
             password: '',
+            password_confirmation: '',
         },
         validationSchema: Yup.object({
             username: Yup.string()
                 .required('Required'),
+            email: Yup.string()
+                .email('Invalid email address')
+                .required('Required'),
             password: Yup.string()
                 .required('Required'),
+            password_confirmation: Yup.string()
+                .required('Required')
+                .oneOf([Yup.ref('password'), null], 'Passwords must match'),
         }),
         onSubmit: values => {
-            dispatch(login(values))
+            const result = { ...values }
+            delete result.password_confirmation
+            console.log(result)
+            dispatch(signUp(result))
                 .then((res) => {
                     if (res.payload && res.payload.status === 200) {
-                        // dispatch(fetchProfileData()) // // TODO: should we fetch profile data here?
+                        // dispatch(fetchProfileData()) // // TODO: should we fetch profile data after sign up?
                         navigate('/');
                     } else {
                         setError(res.payload ? res.payload.data : res.error.message);
                     }
-                })
+                });
+
         },
     });
 
@@ -71,7 +81,7 @@ const Login = () => {
             <CssBaseline/>
             <div className={classes.paper}>
                 <Typography component="h1" variant="h5">
-                    Sign in
+                    Sign Up
                 </Typography>
                 <form className={classes.form} onSubmit={formik.handleSubmit}>
                     <TextField
@@ -94,15 +104,45 @@ const Login = () => {
                         margin="normal"
                         required
                         fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        autoFocus
+                        value={formik.values.email}
+                        onChange={formik.handleChange}
+                        error={formik.touched.email && Boolean(formik.errors.email)}
+                        helperText={formik.touched.email && formik.errors.email}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
                         name="password"
                         label="Password"
                         type="password"
                         id="password"
-                        autoComplete="current-password"
+                        autoComplete="new-password"
                         value={formik.values.password}
                         onChange={formik.handleChange}
                         error={formik.touched.password && Boolean(formik.errors.password)}
                         helperText={formik.touched.password && formik.errors.password}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="password_confirmation"
+                        label="Password Confirmation"
+                        type="password"
+                        id="password_confirmation"
+                        autoComplete="new-password"
+                        value={formik.values.password_confirmation}
+                        onChange={formik.handleChange}
+                        error={formik.touched.password_confirmation && Boolean(formik.errors.password_confirmation)}
+                        helperText={formik.touched.password_confirmation && formik.errors.password_confirmation}
                     />
                     <Button
                         type="submit"
@@ -110,19 +150,13 @@ const Login = () => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        disabled={!formik.isValid}
                     >
-                        Sign In
+                        Sign Up
                     </Button>
                     <Grid container>
-                        <Grid item xs>
-                            <Link component={RouterLink} to="/reset-password" variant="body2">
-                                Forgot password?
-                            </Link>
-                        </Grid>
                         <Grid item>
-                            <Link component={RouterLink} to='/signup' variant="body2">
-                                Don't have an account? Sign Up
+                            <Link component={RouterLink} to="/login" variant="body2">
+                                Already have an account? Sign In
                             </Link>
                         </Grid>
                     </Grid>
@@ -138,4 +172,4 @@ const Login = () => {
     );
 }
 
-export default Login;
+export default SignUp;

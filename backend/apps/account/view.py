@@ -15,7 +15,7 @@ router = APIRouter(
 
 @router.post('/signup')
 def register(request: Request, user: schemas.RegisterUser, db=Depends(get_db)):
-    user_db = crud.get_user(db, user.username)
+    user_db = crud.get_user_by_username(db, user.username)
     if user_db:
         raise HTTPException(status_code=400, detail="exist user with this username")
     crud.create_user(db, user)

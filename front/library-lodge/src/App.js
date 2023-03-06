@@ -2,8 +2,10 @@ import {LicenseInfo} from '@mui/x-license-pro';
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Login from "./pages/Login";
-import SignUp from "./pages/SingUp";
+import SignUp from "./pages/SignUp";
 import Main from "./pages/Main";
+import RequestPasswordReset from "./pages/RequestPasswordReset";
+import PasswordReset from "./pages/PasswordReset";
 
 LicenseInfo.setLicenseKey('x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e');
 
@@ -46,6 +48,8 @@ function App() {
                 <Routes>
                     <Route exact path="/login" element={<Login/>}/>
                     <Route exact path="/signup" element={<SignUp/>} />
+                    <Route exact path="/reset-password" element={<RequestPasswordReset/>} />
+                    <Route exact path="/reset-password/:token" element={<PasswordReset/>} />
                     <Route path="/*" element={<Main/>}/>
                 </Routes>
             </BrowserRouter>
