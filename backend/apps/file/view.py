@@ -34,7 +34,6 @@ async def upload_file(request: Request, token: str, file: UploadFile, upload_inf
     crud.upload_file(db, user_id, file_path, upload_info)
     return f'file {file.filename} uploaded!'
 
-# TODO: conventions with frontend
 @router.get("/file/{file_id}", response_class=HTMLResponse)
 def get_file(request: Request, token: str, file_id: int, db=Depends(get_db)):
     validate_user(db, token)

@@ -10,7 +10,6 @@ from . import models, schemas
 
 templates = Jinja2Templates(directory="templates")
 
-
 def upload_file(db, user_id, file_name, file_upload_info: schemas.FileUpload):
     db_file = models.File(
         user_id=user_id,
@@ -48,8 +47,6 @@ def create_file_template(db: Session, fileTemplate: schemas.CreateFileTemplate, 
     db.refresh(db_file_template)
     return db_file_template.id
 
-
-
 def get_file(db: Session, file_id: int, request):
     file = db.query(models.File).filter(models.File.id == file_id).first()
     if not file:
@@ -71,6 +68,7 @@ def get_file(db: Session, file_id: int, request):
             "user_id": user_id
         }
     )
+
 def download_file(file_id: int, db: Session ):
     file = db.query(models.File).filter(models.File.id == file_id).first()
     if not file:

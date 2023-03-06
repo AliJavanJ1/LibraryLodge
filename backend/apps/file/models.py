@@ -1,5 +1,5 @@
 from enum import Enum
-from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, JSON, ARRAY
+from sqlalchemy import Column, Integer, String, ForeignKey, Boolean, JSON, ARRAY, TIMESTAMP
 from services.sql_app.database import Base
 from sqlalchemy.dialects.postgresql import ENUM
 
@@ -10,6 +10,7 @@ class File(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     name = Column(String)
     desc = Column(String)
+    last_modified = Column(TIMESTAMP)
     extra_info = Column(JSON)
     attachments = Column(JSON)
     file_template_id = Column(Integer, ForeignKey('file_templates.id'))

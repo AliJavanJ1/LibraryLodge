@@ -15,7 +15,6 @@ def is_user(db: Session, token: str):
     
 def create_user(db: Session, user: schemas.RegisterUser):
     db_user = models.User(
-        id=uuid4(),
         username=user.username,
         password=user.password,
         email = user.email,
@@ -30,7 +29,6 @@ def get_user_by_username(db: Session, username: str):
 
 def get_user(db: Session, username: str, password: str):
     return db.query(models.User).filter(models.User.username == username, models.User.password == password).first()
-
 
 def get_token(db: Session, token: str):
     return db.query(models.UserLoginToken).filter(models.UserLoginToken.token == token).first()
