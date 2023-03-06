@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
 from uuid import uuid4
+from fastapi import FastAPI, HTTPException
 from sqlalchemy import desc
 from fastapi.templating import Jinja2Templates
 from uuid import uuid4
+from fastapi.responses import FileResponse
 
 from . import models, schemas
 
@@ -46,7 +48,7 @@ def create_file_template(db: Session, fileTemplate: schemas.CreateFileTemplate, 
     db.refresh(db_file_template)
     return db_file_template.id
 
-    
+
 
 def get_file(db: Session, file_id: int, request):
     file = db.query(models.File).filter(models.File.id == file_id).first()
@@ -57,7 +59,7 @@ def get_file(db: Session, file_id: int, request):
     desc = file.desc
     extra_info = file.extra_info
     attachments = file.attachments
-    
+
     return templates.TemplateResponse(
         "page.html",
         {
@@ -69,3 +71,22 @@ def get_file(db: Session, file_id: int, request):
             "user_id": user_id
         }
     )
+def download_file(file_id: int, db: Session ):
+    file = db.query(models.File).filter(models.File.id == file_id).first()
+    if not file:
+        raise HTTPException(status_code=404, detail="File not found")
+
+    return FileResponse(file.path, filename=file.name)
+
+def get_files(db: Session):
+    files = db.query(models.File).all()
+    return files
+
+def delete_file(file_id: int, db: Session):
+    file = db.query(models.File).filter(models.File.id == file_id).first()
+    if not file:
+        raise HTTPException(status_code=404, detail="File not found")
+    db.delete(file)
+    db.commit()
+    return {"message": "File deleted successfully."}
+

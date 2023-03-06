@@ -49,3 +49,17 @@ def create_Library(request: Request, token: str, library: schemas.CreateLibrary,
 def create_file_template(request: Request, token: str, fileTemplate: schemas.CreateFileTemplate, db=Depends(get_db)):
     user_id = validate_user(db, token)
     return crud.create_file_template(db, fileTemplate, user_id)
+
+@router.get("/download/{file_id}")
+def download_file(file_id: int, token: str, db=Depends(get_db)):
+    validate_user(db, token)
+    return crud.download_file(file_id, db)
+
+@router.get("/all_files")
+def gets_all_files(token: str, db=Depends(get_db)):
+    validate_user(db, token)
+    return crud.get_files(db)
+@router.delete("/delete_file/{file_id}")
+def delete_file(file_id: int, token: str, db=Depends(get_db)):
+    validate_user(db, token)
+    return crud.delete_file(file_id, db)
