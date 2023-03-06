@@ -13,6 +13,12 @@ def is_user(db: Session, token: str):
     else:
         return False
     
+
+def get_profile(db: Session, user_id: int):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    return user
+
+
 def create_user(db: Session, user: schemas.RegisterUser):
     db_user = models.User(
         username=user.username,
