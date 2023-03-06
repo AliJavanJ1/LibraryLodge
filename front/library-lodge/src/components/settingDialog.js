@@ -75,7 +75,7 @@ function SettingDialog() {
                                          </Tooltip>
                                          <Tooltip title={fileTemplate.name + ' Library Icon'} arrow>
                                              <Box sx={{
-                                                 color: 'orange'
+                                                 color: 'primary.main'
                                              }}>
                                                  {iconMap[fileTemplate.libIcon].type.render()}
                                              </Box>

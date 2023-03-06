@@ -9,7 +9,7 @@ const dummy = {
             files: [3, 4, 5],
         },
     },
-    files: [6]
+    files: [6, 7]
 }
 
 const initialState = {

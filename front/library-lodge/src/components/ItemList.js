@@ -1,15 +1,16 @@
 import * as React from 'react';
 import {
-    DataGridPro,
+    DataGridPro, useGridApiRef,
 } from '@mui/x-data-grid-pro';
 import {Stack} from "@mui/material";
-import {useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useSelector} from "react-redux";
 import _ from "lodash";
 import {useLocationItems} from "../utils";
 import prettyBytes from 'pretty-bytes';
 import {iconMap} from "../redux/fileTemplateSlice";
 import ListItemContextMenu from "./ListItemContextMenu";
+import Scrollbars from "react-custom-scrollbars-2";
 
 const isFile = (row) => 'size' in row
 
@@ -113,6 +114,13 @@ const ItemList = () => {
     const file_templates = useSelector(state => state.file_templates)
     const file_template = library_detail ? file_templates[library_detail.file_template] : null
     const file_details = useSelector(state => state.file_details)
+    const apiRef = useGridApiRef()
+    const quickFilterInput = useSelector(state => state.env.quickFilterInput)
+
+    useEffect(() => {
+        let words = quickFilterInput.split(' ').filter(word => word !== '')
+        apiRef.current.setQuickFilterValues(words)
+    }, [apiRef.current, quickFilterInput]);
 
     let columns = useMemo(
         () => getColumns(file_template),
@@ -123,13 +131,12 @@ const ItemList = () => {
 
     const initialListItemContextMenu = {
         open: false,
-        mouseX: null,
-        mouseY: null,
+        mouseX: 0,
+        mouseY: 0,
         id: null,
     }
     const [listItemContextMenu, setListItemContextMenu] = useState(initialListItemContextMenu);
     const handleListItemContextMenu = (event) => {
-        console.log(event)
         event.preventDefault();
         setListItemContextMenu(
             !listItemContextMenu.open
@@ -147,33 +154,37 @@ const ItemList = () => {
     };
 
 
+
     return (
         <Stack sx={{
-            // height: '100%'
-            height: '100vh'
+            height: '100%',
+            width: '100%',
         }}>
-            <DataGridPro
-                rowHeight={48}
-                headerHeight={38}
+            <Scrollbars>
+                <DataGridPro
+                    apiRef={apiRef}
+                    rowHeight={48}
+                    headerHeight={38}
 
-                rows={rows}
-                columns={columns}
+                    rows={rows}
+                    columns={columns}
 
-                disableColumnResize
-                disableSelectionOnClick
-                disableColumnSelector
-                disableColumnPinning
-                disableColumnReorder
-                hideFooter
-                disableColumnMenu
+                    disableColumnResize
+                    disableSelectionOnClick
+                    disableColumnSelector
+                    disableColumnPinning
+                    disableColumnReorder
+                    hideFooter
+                    disableColumnMenu
 
-                componentsProps={{
-                    row: {
-                        onContextMenu: handleListItemContextMenu
-                    },
-                }}
-            />
-            <ListItemContextMenu contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose} />
+                    componentsProps={{
+                        row: {
+                            onContextMenu: handleListItemContextMenu
+                        },
+                    }}
+                />
+            </Scrollbars>
+            <ListItemContextMenu contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose}/>
         </Stack>
     );
 }

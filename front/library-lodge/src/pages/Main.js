@@ -5,7 +5,7 @@ import {useSelector} from "react-redux";
 import Menu from "../components/Menu";
 import {Box, styled} from "@mui/material";
 import SettingDialog from "../components/settingDialog";
-import Dashboard from "./Dashboard";
+import Home from "./Home";
 import ListItemContextMenu from "../components/ListItemContextMenu"; // TODO: remove this and use it for List Items
 
 
@@ -82,7 +82,7 @@ export default function Main() {
                 <Menu setDrawerMenuOpen={setDrawerMenuOpen} drawerMenuOpen={drawerMenuOpen}/>
                 <MainBody drawerMenuOpen={drawerMenuOpen}>
                     <Routes>
-                        <Route path="/" element={<Dashboard/>}/>
+                        <Route path="/" element={<Home/>}/>
                     </Routes>
                 </MainBody>
             </Box>
