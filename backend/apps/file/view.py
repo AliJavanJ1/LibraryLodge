@@ -25,14 +25,13 @@ def validate_user(db, token):
 async def upload_file(request: Request, token: str, file: UploadFile, upload_info: schemas.FileUpload, db=Depends(get_db)):
     user_id = validate_user(db, token)
     path = f'{os.getcwd()}/static/{file.filename}'
-    async with aiofiles.open(path, 'wb') as out_file:
+    async with aiofiles.open(path, 'wb+') as out_file:
         content = await file.read()
         await out_file.write(content)
     file_path=file.filename
     crud.upload_file(db, user_id, file_path, upload_info)
     return f'file {file.filename} uploaded!'
 
-# TODO: conventions with frontend
 @router.get("/file/{file_id}", response_class=HTMLResponse)
 def get_file(request: Request, token: str, file_id: int, db=Depends(get_db)):
     validate_user(db, token)

@@ -24,7 +24,7 @@ def upload_file(db, user_id, file_name, file_upload_info: schemas.FileUpload):
     db.commit()
     db.refresh(db_file)
 
-    if not file_upload_info.library_id is None:
+    if file_upload_info.library_id is not None:
         save_library_file_relation(db, db_file.id, file_upload_info.library_id)
 
     return db_file.id
@@ -38,7 +38,6 @@ def save_library_file_relation(db: Session, file_id: int, library_id: int):
     db.commit()
     db.refresh(db_file_lib_relation)
     
-
 
 def create_library(db: Session, library: schemas.CreateLibrary, user_id: int):
     db_library = models.Library(
@@ -68,7 +67,7 @@ def create_file_template(db: Session, fileTemplate: schemas.CreateFileTemplate, 
 def get_file(db: Session, file_id: int, request):
     file = db.query(models.File).filter(models.File.id == file_id).first()
     if not file:
-        return 'No File!'
+        return f'No File with file id {file_id}!'
     file_path = file.name
     user_id = file.user_id
     desc = file.desc
