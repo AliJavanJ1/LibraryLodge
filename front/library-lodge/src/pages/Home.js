@@ -4,9 +4,12 @@ import {Box, Container, Stack, InputBase} from "@mui/material";
 import FileDetails from "../components/fileDetails/fileDetails";
 import BreadCrumbs from "../components/Breadcrumbs";
 import {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {setQuickFilterInput} from "../redux/envSlice";
 
-const Dashboard = () => {
-    const [localSearch, setLocalSearch] = useState('');
+const Home = () => {
+    const dispatch = useDispatch()
+    const quickFilterInput = useSelector(state => state.env.quickFilterInput)
     
     const data = [
         {id: 1, name: 'MusicNoteOutlinedIcon', link: '#', type: 'MusicNoteOutlinedIcon'},
@@ -44,8 +47,10 @@ const Dashboard = () => {
                         borderRadius: 1,
                         marginBottom: 1
                     }}
-                    value={localSearch}
-                    onChange={e => setLocalSearch(e.target.value)}
+                    value={quickFilterInput}
+                    onChange={e => {
+                        dispatch(setQuickFilterInput(e.target.value))
+                    }}
                 />
             </Box>
             <Stack direction={'row'} spacing={2}>
@@ -62,4 +67,4 @@ const Dashboard = () => {
     );
 }
 
-export default Dashboard;
+export default Home;
