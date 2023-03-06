@@ -1,11 +1,13 @@
 import ItemList from "../components/ItemList";
+import FileDialogTest from "../components/fileDialogTest";
+import {Box, Container, Stack, InputBase} from "@mui/material";
+import FileDetails from "../components/fileDetails/fileDetails";
 import BreadCrumbs from "../components/Breadcrumbs";
-import {Box, InputBase} from "@mui/material";
 import {useState} from "react";
 
 const Dashboard = () => {
     const [localSearch, setLocalSearch] = useState('');
-
+    
     const data = [
         {id: 1, name: 'MusicNoteOutlinedIcon', link: '#', type: 'MusicNoteOutlinedIcon'},
         {id: 2, name: 'SlideshowOutlinedIcon', link: '#', type: 'SlideshowOutlinedIcon'},
@@ -21,7 +23,7 @@ const Dashboard = () => {
 
 
     return (
-        <>
+        <Container maxWidth='xl'>
             <Box
                 sx={{
                     display: 'flex',
@@ -46,8 +48,17 @@ const Dashboard = () => {
                     onChange={e => setLocalSearch(e.target.value)}
                 />
             </Box>
-            <ItemList/>
-        </>
+            <Stack direction={'row'} spacing={2}>
+                <Box sx={{
+                    flex: 4,
+                    height: 'calc(100vh - 120px)',
+                }}>
+                    <ItemList/>
+                </Box>
+                {/*<FileDialogTest/>*/}
+                <FileDetails/>
+            </Stack>
+        </Container>
     );
 }
 
