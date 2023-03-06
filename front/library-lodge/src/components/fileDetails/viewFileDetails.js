@@ -91,7 +91,7 @@ const ViewFileDetails = ({fileId, setEditing}) => {
     return (
         <Paper elevation={5} sx={{
             flex: 1,
-            height: 'calc(100vh - 120px)'
+            height: 'calc(100vh - 160px)'
         }}>
             <Stack sx={{
                 height: '100%',
