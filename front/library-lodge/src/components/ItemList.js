@@ -10,6 +10,7 @@ import {useLocationItems} from "../utils";
 import prettyBytes from 'pretty-bytes';
 import {iconMap} from "../redux/fileTemplateSlice";
 import ListItemContextMenu from "./ListItemContextMenu";
+import Scrollbars from "react-custom-scrollbars-2";
 
 const isFile = (row) => 'size' in row
 
@@ -149,32 +150,33 @@ const ItemList = () => {
 
     return (
         <Stack sx={{
-            // height: '100%'
-            height: '100vh',
+            height: '100%',
             width: '100%',
         }}>
-            <DataGridPro
-                rowHeight={48}
-                headerHeight={38}
+            <Scrollbars>
+                <DataGridPro
+                    rowHeight={48}
+                    headerHeight={38}
 
-                rows={rows}
-                columns={columns}
+                    rows={rows}
+                    columns={columns}
 
-                disableColumnResize
-                disableSelectionOnClick
-                disableColumnSelector
-                disableColumnPinning
-                disableColumnReorder
-                hideFooter
-                disableColumnMenu
+                    disableColumnResize
+                    disableSelectionOnClick
+                    disableColumnSelector
+                    disableColumnPinning
+                    disableColumnReorder
+                    hideFooter
+                    disableColumnMenu
 
-                componentsProps={{
-                    row: {
-                        onContextMenu: handleListItemContextMenu
-                    },
-                }}
-            />
-            <ListItemContextMenu contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose} />
+                    componentsProps={{
+                        row: {
+                            onContextMenu: handleListItemContextMenu
+                        },
+                    }}
+                />
+            </Scrollbars>
+            <ListItemContextMenu contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose}/>
         </Stack>
     );
 }

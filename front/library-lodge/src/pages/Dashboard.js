@@ -1,13 +1,21 @@
 import React from 'react';
 import ItemList from "../components/ItemList";
 import FileDialogTest from "../components/fileDialogTest";
-import {Container, Stack} from "@mui/material";
+import {Box, Container, Stack} from "@mui/material";
+import FileDetails from "../components/fileDetails/fileDetails";
+import Scrollbars from "react-custom-scrollbars-2";
 
 const Dashboard = (props) => (
-    <Container fixed>
-        <Stack direction={'row'}>
-            <ItemList/>
+    <Container maxWidth='xl'>
+        <Stack direction={'row'} spacing={2}>
+            <Box sx={{
+                flex: 4,
+                height: 'calc(100vh - 120px)',
+            }}>
+                <ItemList/>
+            </Box>
             {/*<FileDialogTest/>*/}
+            <FileDetails/>
         </Stack>
     </Container>
 );
