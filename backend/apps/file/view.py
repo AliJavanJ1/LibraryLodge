@@ -28,9 +28,19 @@ async def upload_file(request: Request, token: str, file: UploadFile, upload_inf
     async with aiofiles.open(path, 'wb+') as out_file:
         content = await file.read()
         await out_file.write(content)
-    file_path=file.filename
-    crud.upload_file(db, user_id, file_path, upload_info)
-    return f'file {file.filename} uploaded!'
+    file_id = crud.upload_file(db, user_id, file.filename, "FILE", upload_info)
+    return file_id
+
+@router.post("/upload_attachment")
+async def upload_attachment(request: Request, token: str, file: UploadFile, upload_info: schemas.AttachmentUpload, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    path = f'{os.getcwd()}/static/{file.filename}'
+    async with aiofiles.open(path, 'wb+') as out_file:
+        content = await file.read()
+        await out_file.write(content)
+    attachment_id = crud.upload_file(db, user_id, file.filename, "ATTACHMENT", upload_info)
+    crud.add_attachment(db, upload_info.file_id, upload_info.key, attachment_id)
+    return attachment_id
 
 @router.get("/file/{file_id}", response_class=HTMLResponse)
 def get_file(request: Request, token: str, file_id: int, db=Depends(get_db)):
