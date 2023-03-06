@@ -54,8 +54,8 @@ def download_file(file_id: int, token: str, db=Depends(get_db)):
 
 @router.get("/all_files")
 def gets_all_files(token: str, db=Depends(get_db)):
-    validate_user(db, token)
-    return crud.get_files(db)
+    user_id = validate_user(db, token)
+    return crud.get_files(db, user_id)
 
 @router.delete("/delete_file/{file_id}")
 def delete_file(file_id: int, token: str, db=Depends(get_db)):

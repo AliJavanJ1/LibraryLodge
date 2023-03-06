@@ -22,7 +22,6 @@ class Library(Base):
     name = Column(String)
     user_id = Column(Integer, ForeignKey('users.id'))
     file_template_id = Column(Integer, ForeignKey('file_templates.id'))
-    accepted_file = Column(ARRAY(String))
     
 class FileTemplates(Base):
     __tablename__ = "file_templates"
