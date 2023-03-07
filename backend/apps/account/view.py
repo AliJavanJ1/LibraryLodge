@@ -46,3 +46,9 @@ def logout(response: Response, request: Request, db=Depends(get_db)):
 def getProfile(request: Request, db=Depends(get_db)):
     user_id = validate_user(db, request.headers['session'])
     return crud.get_profile(user_id)
+
+@router.put("/update_profile/{user_id}")
+def update_profile(request: Request, username: str, password: str, email: str, db=Depends(get_db)):
+    user_id = validate_user(db, request.headers['session'])
+    updated_profile = crud.update_user(db, user_id, username, email, password)
+    return updated_profile

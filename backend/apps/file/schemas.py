@@ -7,6 +7,7 @@ class FileUpload(BaseModel):
     extra_info: dict
     attachments: dict
     library_id: Optional[int] = None
+    file_template_id: int
 
     @classmethod
     def __get_validators__(cls):
@@ -19,8 +20,8 @@ class FileUpload(BaseModel):
         return value
     
 class AttachmentUpload(BaseModel):
+    id: str
     file_id: str
-    key: str
 
     @classmethod
     def __get_validators__(cls):
@@ -40,3 +41,9 @@ class CreateFileTemplate(BaseModel):
     name: str
     attachments: list
     extra_info: list
+
+class AddFileTemplateInfo(BaseModel):
+    file_template_id: int
+    is_attachment_type: bool
+    id: int
+    name: str
