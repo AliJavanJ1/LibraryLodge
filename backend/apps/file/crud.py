@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import select
 from uuid import uuid4
 from fastapi import FastAPI, HTTPException
 from sqlalchemy import desc
@@ -12,20 +13,28 @@ from . import models, schemas
 templates = Jinja2Templates(directory="templates")
 
 
-def upload_file(db, user_id, file_name, file_upload_info: schemas.FileUpload):
-    db_file = models.File(
-        user_id=user_id,
-        name=file_name,
-        desc = file_upload_info.desc,
-        extra_info = file_upload_info.extra_info,
-        attachments = file_upload_info.attachments
-    )
+def upload_file(db, user_id, file_name, file_type, file_upload_info: schemas.FileUpload):
+    if file_type == "FILE":
+        db_file = models.File(
+            user_id=user_id,
+            name=file_name,
+            type=file_type,
+            desc = file_upload_info.desc,
+            extra_info = file_upload_info.extra_info,
+            attachments = file_upload_info.attachments
+        )
+    elif file_type == "ATTACHMENT":
+        db_file = models.File(
+            user_id=user_id,
+            name=file_name,
+            type=file_type
+        )
 
     db.add(db_file)
     db.commit()
     db.refresh(db_file)
 
-    if file_upload_info.library_id is not None:
+    if file_type == "FILE" and file_upload_info.library_id is not None:
         save_library_file_relation(db, db_file.id, file_upload_info.library_id)
 
     return db_file.id
@@ -39,6 +48,7 @@ def save_library_file_relation(db: Session, file_id: int, library_id: int):
     db.commit()
     db.refresh(db_file_lib_relation)
     
+
 
 def create_library(db: Session, library: schemas.CreateLibrary, user_id: int):
     db_library = models.Library(
@@ -63,6 +73,14 @@ def create_file_template(db: Session, fileTemplate: schemas.CreateFileTemplate, 
     db.commit()
     db.refresh(db_file_template)
     return db_file_template.id
+
+
+def add_attachment(db: Session, file_id, key, attachment_id):
+    file = db.query(models.File).filter(models.File.id == file_id).one()
+    file.attachments[key] = attachment_id
+    db.query(models.File).filter(models.File.id == file_id).update(
+        {models.File.attachments: file.attachments})
+    db.commit()
 
 
 def get_file(db: Session, file_id: int, request):
@@ -98,11 +116,43 @@ def get_files(db: Session, user_id: int):
     files = db.query(models.File).filter(models.File.user_id == user_id).all()
     return files
 
-def delete_file(file_id: int, db: Session):
-    file = db.query(models.File).filter(models.File.id == file_id).first()
+def get_library(db: Session, user_id: int, library_id: int, request):
+    library = db.query(models.Library).filter(models.Library.id == library_id and models.Library.user_id == user_id).first()
+    if not library:
+        raise HTTPException(status_code=404, detail="File not found")
+
+    file_template_id = library.file_template_id
+    name = library.name
+    createDate = library.create_date
+
+    return templates.TemplateResponse(
+        "page.html",
+        {
+            "request": request,
+            "name": name,
+            "file_template_id": file_template_id,
+            "created_at": createDate
+        }
+    )
+
+def get_all_libraries(db: Session, user_id: int):
+    libraries = db.query(models.Library).filter(models.Library.user_id == user_id).all()
+    return libraries
+
+
+def delete_file(file_id: int, user_id: int, db: Session):
+    file = db.query(models.File).filter(models.File.id == file_id and models.Library.user_id == user_id).first()
     if not file:
         raise HTTPException(status_code=404, detail="File not found")
     db.delete(file)
     db.commit()
     return {"message": "File deleted successfully."}
+
+def delete_library(library_id: int, user_id: int, db: Session):
+    library = db.query(models.Library).filter(models.Library.id == library_id and models.Library.user_id == user_id).first()
+    if not library:
+        raise HTTPException(status_code=404, detail="library not found")
+    db.delete(library)
+    db.commit()
+    return {"message": "library deleted successfully."}
 
