@@ -39,7 +39,7 @@ async def upload_attachment(request: Request, file: UploadFile, upload_info: sch
         content = await file.read()
         await out_file.write(content)
     attachment_id = crud.upload_file(db, user_id, file.filename, "ATTACHMENT", upload_info)
-    crud.add_attachment(db, upload_info.file_id, upload_info.key, attachment_id)
+    crud.add_attachment(db, upload_info.file_id, upload_info.id, attachment_id)
     return attachment_id
 
 @router.get("/file/{file_id}", response_class=HTMLResponse)
@@ -63,6 +63,17 @@ def create_file_template(request: Request, fileTemplate: schemas.CreateFileTempl
     user_id = validate_user(db, request.headers['session'])
     return crud.create_file_template(db, fileTemplate, user_id)
 
+@router.post("/create/file-templates")
+def get_all_file_templates(request: Request, token: str, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    return crud.get_file_templates(db, user_id)
+
+@router.put("/append/file-template-info")
+def add_file_template_info(request: Request, token: str, body :schemas.AddFileTemplateInfo, db=Depends(get_db)):
+    user_id = validate_user(db, token)
+    crud.add_file_template_info(db, user_id, body)
+    return "HELL YEAH!!!! new attachment type!!!!"
+
 @router.get("/download/{file_id}")
 def download_file(request: Request, file_id: int, db=Depends(get_db)):
     validate_user(db, request.headers['session'])
@@ -84,6 +95,6 @@ def delete_file(request: Request, file_id: int, db=Depends(get_db)):
     return crud.delete_file(file_id, user_id, db)
 
 @router.delete("/delete_library/{library_id}")
-def delete_library(request: Request, library: int, db=Depends(get_db)):
+def delete_library(request: Request, library_id: int, db=Depends(get_db)):
     user_id = validate_user(db, request.headers['session'])
-    return crud.delete_library(library, user_id, db)
+    return crud.delete_library(library_id, user_id, db)
