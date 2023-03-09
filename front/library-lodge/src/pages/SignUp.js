@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {signUp, fetchProfileData} from "../redux/profileSlice";
+import {signUp, fetchProfileData, login, resetProfile} from "../redux/profileSlice";
 import {useNavigate, Link as RouterLink} from "react-router-dom";
 import {useFormik} from "formik";
 import * as Yup from "yup";
@@ -34,8 +34,8 @@ const SignUp = () => {
     const profile = useSelector((state) => state.profile);
 
     useEffectOnce(() => {
-        if (!profile) {
-            // navigate('/'); // TODO: redirect to dashboard
+        if (profile) {
+            navigate('/'); // TODO: redirect to dashboard
         }
     });
 
@@ -62,16 +62,25 @@ const SignUp = () => {
         onSubmit: values => {
             const result = { ...values }
             delete result.password_confirmation
-            console.log(result)
-            dispatch(signUp(result))
+            dispatch(signUp(result)).unwrap()
                 .then((res) => {
-                    if (res.payload && res.payload.status === 200) {
-                        // dispatch(fetchProfileData()) // // TODO: should we fetch profile data after sign up?
-                        navigate('/');
-                    } else {
-                        setError(res.payload ? res.payload.data : res.error.message);
-                    }
-                });
+                    const account = { username: values.username, password: values.password }
+                    dispatch(login(account)).unwrap()
+                        .then((res) => {
+                            dispatch(fetchProfileData()).unwrap()
+                                .then((res) => navigate('/'))
+                                .catch((message) => {
+                                    dispatch(resetProfile())
+                                    navigate('/login')
+                                })
+                        })
+                        .catch((message) => {
+                            navigate('/login')
+                        })
+                })
+                .catch((message) => {
+                    setError(message);
+                })
 
         },
     });

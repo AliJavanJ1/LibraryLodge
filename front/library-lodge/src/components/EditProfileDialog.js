@@ -59,7 +59,7 @@ export default function EditProfileDialog({open, onClose}) {
             }
             dispatch(editProfile(result))
                 .then((res) => {
-                    if (res.payload && res.payload.status === 200) {
+                    if (res.payload && res.meta.requestStatus) {
                         // dispatch(fetchProfileData()) // TODO: should we fetch profile data here?
                         // TODO show success message
                         handleClose();
@@ -84,7 +84,7 @@ export default function EditProfileDialog({open, onClose}) {
             formik.setFieldValue('password', '');
             formik.setFieldValue('password_confirmation', '');
         }
-    }, [usernameIsEditing, emailIsEditing, passwordIsEditing]);
+    }, [usernameIsEditing, emailIsEditing, passwordIsEditing, profile.username, profile.email]);
 
     const handleClose = () => {
         setUsernameIsEditing(false);
@@ -101,7 +101,6 @@ export default function EditProfileDialog({open, onClose}) {
             sx={{
                 '& .MuiDialog-paper': {
                     width: '100%',
-                    maxWidth: '500px',
                 }
             }}
         >
@@ -146,7 +145,6 @@ export default function EditProfileDialog({open, onClose}) {
                 <DialogContent
                     dividers
                     sx={{
-                        // remove the default padding
                         '&:first-child': {
                             paddingY: 0,
                         }

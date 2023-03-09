@@ -1,12 +1,13 @@
 import {Fragment, useState} from "react";
 import Header from "../components/Header";
-import {Navigate, Route, Routes} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 import Menu from "../components/Menu";
 import {Box, styled} from "@mui/material";
 import SettingDialog from "../components/settingDialog";
 import Home from "./Home";
 import ListItemContextMenu from "../components/ListItemContextMenu"; // TODO: remove this and use it for List Items
+import {useEffectOnce} from "react-use";
 
 
 const MainBody = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerMenuOpen' })(
@@ -32,6 +33,8 @@ const MainBody = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerM
 export default function Main() {
     const isLoggedIn = useSelector((state) => state.profile || true); // TODO: remove " || true"
     const [drawerMenuOpen, setDrawerMenuOpen] = useState(false);
+    const profile = useSelector((state) => state.profile);
+    const navigate = useNavigate();
 
     const [listItemContextMenu, setListItemContextMenu] = useState({
         id: 1,
@@ -39,6 +42,12 @@ export default function Main() {
         mouseX: 0,
         mouseY: 0,
     }); // TODO: remove this and use it for List Items
+
+    useEffectOnce(() => {
+        if (!profile) {
+            navigate('/login');
+        }
+    });
     const handleListItemContextMenu = (event) => { // TODO: remove this and use it for List Items
         event.preventDefault();
         setListItemContextMenu(

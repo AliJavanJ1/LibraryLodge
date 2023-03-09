@@ -4,7 +4,7 @@ import {useNavigate, Link as RouterLink} from "react-router-dom";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
-import {fetchProfileData, login} from "../redux/profileSlice";
+import {fetchProfileData, login, resetProfile} from "../redux/profileSlice";
 import {makeStyles} from "@mui/styles";
 import Alert from "../components/Alert";
 import {useEffectOnce} from "react-use";
@@ -35,7 +35,7 @@ const Login = () => {
 
     useEffectOnce(() => {
         if (profile) {
-            // navigate('/'); // TODO: redirect to dashboard
+            navigate('/'); // TODO: redirect to dashboard
         }
     });
 
@@ -54,14 +54,17 @@ const Login = () => {
                 .required('Required'),
         }),
         onSubmit: values => {
-            dispatch(login(values))
+            dispatch(login(values)).unwrap()
                 .then((res) => {
-                    if (res.payload && res.payload.status === 200) {
-                        // dispatch(fetchProfileData()) // // TODO: should we fetch profile data here?
-                        navigate('/');
-                    } else {
-                        setError(res.payload ? res.payload.data : res.error.message);
-                    }
+                    dispatch(fetchProfileData()).unwrap()
+                        .then((res) => navigate('/'))
+                        .catch((message) => {
+                            dispatch(resetProfile())
+                            navigate('/login')
+                        })
+                })
+                .catch((message) => {
+                    setError(message)
                 })
         },
     });

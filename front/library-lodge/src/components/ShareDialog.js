@@ -34,7 +34,7 @@ function ShareDialog({id, open, onClose}) {
         return () => {
             dispatch(fetchProfileData({username: username})) // TODO: change to delete share
                 .then((res) => {
-                    if (true || res.payload && res.payload.status === 200) {
+                    if (true || res.payload && res.meta.requestStatus) {
                         setAlert({"severity": "success",
                             "message": "Stopped sharing with " + username});
                         setUsers(users.filter((user) => user.username !== username));
@@ -59,7 +59,7 @@ function ShareDialog({id, open, onClose}) {
         onSubmit: values => {
             dispatch(fetchProfileData(values))
                 .then((res) => {
-                    if (true || res.payload && res.payload.status === 200) { // TODO: change to share
+                    if (true || res.payload && res.meta.requestStatus) { // TODO: change to share
                         setAlert({"severity": "success",
                             "message": "Shared With " + values.username});
                         setUsers([...users, {id: users.length && users[users.length - 1].id + 1, username: values.username}])

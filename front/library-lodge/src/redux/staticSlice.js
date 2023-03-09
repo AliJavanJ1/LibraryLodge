@@ -5,8 +5,8 @@ const dummy = {
 }
 
 const initialState = {
-    'domain': 'http://localhost:8000',
-    'apiDomain': 'http://localhost:8000/api',
+    'domain': 'http://localhost:3000',
+    'apiDomain': 'http://localhost:8080',
     ...dummy,
 }
 
