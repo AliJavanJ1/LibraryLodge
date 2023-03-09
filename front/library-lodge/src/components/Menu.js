@@ -26,7 +26,7 @@ import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import EditProfileDialog from "./EditProfileDialog";
 import {setSettingDialogOpen} from "../redux/envSlice";
-import PlayerDialog from "./PlayerDialog";
+import LibraryDialog from "./LibraryDialog";
 
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -95,7 +95,7 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
 
     const handleLogout = () => {
         dispatch(logout()).then((res) => {
-            if (res.payload && res.payload.status === 200) {
+            if (res.payload && res.meta.requestStatus) {
                 navigate('/login');
             }
             else {
@@ -117,6 +117,11 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
     const handleHome = () => {
         setDrawerMenuOpen(false);
         navigate('/');
+    }
+
+    const [newLibraryDialogOpen, setNewLibraryDialogOpen] = useState(false);
+    const handleNewLibrary = () => {
+        setNewLibraryDialogOpen(true);
     }
 
     return (
@@ -185,10 +190,11 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
                         Upload New File
                     </MenuItem>
                     <Divider/>
-                    <MenuItem onClick={handleNewMenuClose} disableRipple>
+                    <MenuItem onClick={handleNewLibrary} disableRipple>
                         <CreateNewFolderIcon />
-                        New Directory
+                        New Library
                     </MenuItem>
+                    <LibraryDialog open={newLibraryDialogOpen} onClose={() => setNewLibraryDialogOpen(false)} />
                 </StyledMenu>
                 <IconButton
                     onClick={() => setDrawerMenuOpen(false)}

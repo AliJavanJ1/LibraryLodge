@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Dialog, DialogActions,
     DialogContent,
@@ -92,43 +93,60 @@ export default function LibraryDialog({open, onClose, name=null, type=null}) {
                     },
                 }}
             >
-                <FormControl
-                    margin="normal"
-                    error={formik.touched.name && Boolean(formik.errors.name)}
-                    sx={{
-                        width: 200,
-                        marginRight: 3
-                    }}
-                >
-                    <InputLabel>Type</InputLabel>
-                    <Select
-                        name="type"
-                        value={formik.values.type}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        label="Age"
+                {name
+                 ? (<Box
+                        sx={{
+                            width: 200,
+                            marginRight: 3,
+                            display: "flex",
+                        }}
                     >
-                        {libraryOptions.map((option) => (
-                            <MenuItem
-                                value={option.name}
-                                key={option.name}
-                                sx={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "flex-start",
-                                }}
-                            >
-                                {iconMap[option.libIcon].type.render({
-                                    fontSize: "small",
-                                    sx: {
-                                        marginRight: 1,
-                                    }
-                                })}
-                                {option.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                        {iconMap[libraryOptions.find((option) => option.name === type)].type.render({
+                            fontSize: "small",
+                            sx: {
+                                marginRight: 1,
+                            }
+                        })}
+                        {name}
+                    </Box>)
+                 : (<FormControl
+                        margin="normal"
+                        error={formik.touched.name && Boolean(formik.errors.name)}
+                        sx={{
+                            width: 200,
+                            marginRight: 3
+                        }}
+                    >
+                        <InputLabel>Type</InputLabel>
+                        <Select
+                            name="type"
+                            value={formik.values.type}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            label="Age"
+                        >
+                            {libraryOptions.map((option) => (
+                                <MenuItem
+                                    value={option.name}
+                                    key={option.name}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "flex-start",
+                                    }}
+                                >
+                                    {iconMap[option.libIcon].type.render({
+                                        fontSize: "small",
+                                        sx: {
+                                            marginRight: 1,
+                                        }
+                                    })}
+                                    {option.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>)
+                }
                 <TextField
                     variant="outlined"
                     margin="normal"

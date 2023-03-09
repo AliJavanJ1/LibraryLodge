@@ -51,7 +51,7 @@ function PasswordReset() {
             delete result.password_confirmation;
             dispatch(resetPassword(values))
                 .then((res) => {
-                    if (res.payload && res.payload.status === 200) {
+                    if (res.payload && res.meta.requestStatus) {
                         // dispatch(fetchProfileData()) // // TODO: should we fetch profile data after reset password?
                         navigate('/');
                     } else {

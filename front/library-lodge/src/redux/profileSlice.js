@@ -8,133 +8,206 @@ const dummy = {
 
 const fetchProfileData = createAsyncThunk(
     'profile/fetchProfileData',
-    async () => {
-        return await fetch(staticIS.apiDomain + '/profile/', {
-            method: 'GET',
-            credentials: 'include',
-        }).then(response => response.json())
+    async (arg, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/account/profile/', {
+                method: 'GET',
+                credentials: 'include',
+                accessControlAllowOrigin: staticIS.domain,
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        }
+        catch (e) {
+            return rejectWithValue(e.message)
+        }
     }
 )
 
 const login = createAsyncThunk(
     'profile/login',
-    async (arg) => {
-        return await fetch(staticIS.apiDomain + '/login/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(arg),
-        }).then(response => response.json())
+    async (arg, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/account/login/', {
+                method: 'POST',
+                credentials: 'include',
+                accessControlAllowOrigin: staticIS.domain,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(arg),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        }
+        catch (e) {
+            return rejectWithValue(e.message)
+        }
     }
 )
 
 const signUp = createAsyncThunk(
     'profile/signUp',
-    async (arg) => {
-        return await fetch(staticIS.apiDomain + '/signup/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(arg),
-        }).then(response => response.json())
+    async (arg, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/account/signup/', {
+                method: 'POST',
+                credentials: 'include',
+                accessControlAllowOrigin: staticIS.domain,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(arg),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        }
+        catch (e) {
+            return rejectWithValue(e.message)
+        }
     }
 )
 
 const logout = createAsyncThunk(
-    'profile/logout',
-    async () => {
-        return await fetch(staticIS.apiDomain + '/logout/', {
-            method: 'POST',
-            credentials: 'include',
-        }).then(response => response.json())
+    'profile/logout', async (arg, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/account/logout/', {
+                method: 'POST',
+                credentials: 'include',
+                accessControlAllowOrigin: staticIS.domain,
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        }
+        catch (e) {
+            return rejectWithValue(e.message)
+        }
     }
 )
 
 const editProfile = createAsyncThunk(
     'profile/editProfile',
-    async (arg) => {
-        return await fetch(staticIS.apiDomain + '/edit-profile/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(arg),
-        }).then(response => response.json())
+    async (arg, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/edit-profile/', {
+                method: 'PUT',
+                credentials: 'include',
+                accessControlAllowOrigin: staticIS.domain,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(arg),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        }
+        catch (e) {
+            return rejectWithValue(e.message)
+        }
     }
 )
 
 const requestPasswordReset = createAsyncThunk(
     'profile/requestPasswordReset',
-    async (arg) => {
-        return await fetch(staticIS.apiDomain + '/reset-password/', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(arg),
-        }).then(response => response.json())
+    async (arg, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/reset-password/', {
+                method: 'POST',
+                credentials: 'include',
+                accessControlAllowOrigin: staticIS.domain,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(arg),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        }
+        catch (e) {
+            return rejectWithValue(e.message)
+        }
     }
 )
 
 const resetPassword = createAsyncThunk(
     'profile/resetPassword',
-    async (arg) => {
-        return await fetch(staticIS.apiDomain + '/reset-password/', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(arg),
-        }).then(response => response.json())
+    async (arg, {rejectWithValue, fulfillWithValue}) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/reset-password/', {
+                method: 'PUT',
+                credentials: 'include',
+                accessControlAllowOrigin: staticIS.domain,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(arg),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        }
+        catch (e) {
+            return rejectWithValue(e.message)
+        }
     }
 )
 
-const initialState = {
-    ...dummy,
-}
-// const initialState = null
+// const initialState = {
+//     ...dummy,
+// }
+const initialState = null
 
 const staticSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
-
+        resetProfile(state, action) {
+            console.log("resetProfile")
+            state = initialState
+            return state
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchProfileData.fulfilled, (state, action) => {
             state = action.payload
             return state
         })
-        builder.addCase(login.fulfilled, (state, action) => {
-            state = action.payload
-            return state
-        })
-        builder.addCase(signUp.fulfilled, (state, action) => {
-            state = action.payload
-            return state
-        })
+        // builder.addCase(login.fulfilled, (state, action) => {
+        //     state = action.payload
+        //     return state
+        // })
+        // builder.addCase(signUp.fulfilled, (state, action) => {
+        //     state = action.payload
+        //     return state
+        // })
         builder.addCase(logout.fulfilled, (state, action) => { // TODO: should I delete action input?
             state = null
             return state
         })
-        builder.addCase(editProfile.fulfilled, (state, action) => {
-            state = action.payload
-            return state
-        })
-        builder.addCase(resetPassword.fulfilled, (state, action) => {
-            state = action.payload
-            return state
-        })
+        // builder.addCase(editProfile.fulfilled, (state, action) => {
+        //     state = action.payload
+        //     return state
+        // })
+        // builder.addCase(resetPassword.fulfilled, (state, action) => {
+        //     state = action.payload
+        //     return state
+        // })
     }
 })
 
-export const {} = staticSlice.actions
+export const {resetProfile} = staticSlice.actions
 export default staticSlice.reducer
 export {fetchProfileData, login, signUp, logout, editProfile, requestPasswordReset, resetPassword}

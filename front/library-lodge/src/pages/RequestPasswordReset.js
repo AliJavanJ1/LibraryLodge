@@ -42,7 +42,7 @@ const RequestPasswordReset = () => {
         onSubmit: values => {
             dispatch(requestPasswordReset(values))
                 .then((res) => {
-                    if (res.payload && res.payload.status === 200) {
+                    if (res.payload && res.meta.requestStatus) {
                         setAlert({"severity": "success",
                             "message": "Password reset email sent"});
                     } else {
