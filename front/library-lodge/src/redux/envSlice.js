@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const initialState = {
     location: [],
+    sharedLocation: [],
     settingDialogOpen: false,
     fileDetail: 7,
     // fileDetail: -1,

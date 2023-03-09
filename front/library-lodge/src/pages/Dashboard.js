@@ -8,12 +8,12 @@ import {useDispatch, useSelector} from "react-redux";
 import {setQuickFilterInput} from "../redux/envSlice";
 import {useLocationFileTemplate, useLocationItems} from "../utils";
 
-const Home = () => {
+const Dashboard = ({shared = false}) => {
     const dispatch = useDispatch()
     const quickFilterInput = useSelector(state => state.env.quickFilterInput)
-    const {libs, files} = useLocationItems()
-    const file_template = useLocationFileTemplate()
-    
+    const {libs, files} = useLocationItems(shared)
+    const file_template = useLocationFileTemplate(shared)
+
     const data = [
         {id: 1, name: 'MusicNoteOutlinedIcon', link: '#', type: 'MusicNoteOutlinedIcon'},
         {id: 2, name: 'SlideshowOutlinedIcon', link: '#', type: 'SlideshowOutlinedIcon'},
@@ -42,7 +42,7 @@ const Home = () => {
                             alignItems: 'center',
                         }}
                     >
-                        <BreadCrumbs data={data} />
+                        <BreadCrumbs data={data}/>
                         <InputBase
                             placeholder="Filter..."
                             type="search"
@@ -61,6 +61,7 @@ const Home = () => {
                             }}
                         />
                     </Box>
+
                     <ItemList files={files} libs={libs} file_template={file_template}/>
                 </Box>
                 {/*<FileDialogTest/>*/}
@@ -70,4 +71,4 @@ const Home = () => {
     );
 }
 
-export default Home;
+export default Dashboard;
