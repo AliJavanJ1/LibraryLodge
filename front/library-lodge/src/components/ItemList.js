@@ -6,7 +6,7 @@ import {Stack} from "@mui/material";
 import {useEffect, useMemo, useState} from "react";
 import {useSelector} from "react-redux";
 import _ from "lodash";
-import {useLocationItems} from "../utils";
+import {useLocationFileTemplate, useLocationItems} from "../utils";
 import prettyBytes from 'pretty-bytes';
 import {iconMap} from "../redux/fileTemplateSlice";
 import ListItemContextMenu from "./ListItemContextMenu";
@@ -58,7 +58,7 @@ const getColumns = (ft) => {
         {
             field: 'last_modified',
             headerName: 'Last Modified',
-            width: 200,
+            minWidth: 150,
             type: 'dateTime',
             valueGetter: (params) => new Date(params.row.last_modified),
             valueFormatter: (params) => new Date(params.value).toDateString(),
@@ -66,7 +66,7 @@ const getColumns = (ft) => {
         {
             field: 'size',
             headerName: 'Size',
-            width: 200,
+            // width: 200,
             type: 'number',
             align: 'left',
             headerAlign: 'left',
@@ -78,7 +78,7 @@ const getColumns = (ft) => {
         let info_cols = _.map(ft.information, (info, key) => {
             return {
                 field: info,
-                width: 200,
+                // width: 200,
                 valueGetter: (params) => key in params.row.information ? params.row.information[key] : '-',
             }
         })
@@ -106,13 +106,9 @@ const getRows = (currFiles, currLibs, file_details, library_details, file_templa
 }
 
 
-const ItemList = () => {
-    const {libs: currLibs, files: currFiles} = useLocationItems()
-    const location = useSelector(state => state.env.location)
+const ItemList = ({libs: currLibs = [], files: currFiles = [], file_template = null}) => {
     const library_details = useSelector(state => state.library_details)
-    const library_detail = location.length > 0 ? library_details[_.last(location)] : null
     const file_templates = useSelector(state => state.file_templates)
-    const file_template = library_detail ? file_templates[library_detail.file_template] : null
     const file_details = useSelector(state => state.file_details)
     const apiRef = useGridApiRef()
     const quickFilterInput = useSelector(state => state.env.quickFilterInput)
@@ -154,7 +150,6 @@ const ItemList = () => {
     };
 
 
-
     return (
         <Stack sx={{
             height: '100%',
@@ -169,7 +164,7 @@ const ItemList = () => {
                     rows={rows}
                     columns={columns}
 
-                    disableColumnResize
+                    // disableColumnResize
                     disableSelectionOnClick
                     disableColumnSelector
                     disableColumnPinning

@@ -6,10 +6,13 @@ import BreadCrumbs from "../components/Breadcrumbs";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {setQuickFilterInput} from "../redux/envSlice";
+import {useLocationFileTemplate, useLocationItems} from "../utils";
 
 const Home = () => {
     const dispatch = useDispatch()
     const quickFilterInput = useSelector(state => state.env.quickFilterInput)
+    const {libs, files} = useLocationItems()
+    const file_template = useLocationFileTemplate()
     
     const data = [
         {id: 1, name: 'MusicNoteOutlinedIcon', link: '#', type: 'MusicNoteOutlinedIcon'},
@@ -58,7 +61,7 @@ const Home = () => {
                             }}
                         />
                     </Box>
-                    <ItemList/>
+                    <ItemList files={files} libs={libs} file_template={file_template}/>
                 </Box>
                 {/*<FileDialogTest/>*/}
                 <FileDetails/>
