@@ -26,6 +26,7 @@ import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import EditProfileDialog from "./EditProfileDialog";
 import {setSettingDialogOpen} from "../redux/envSlice";
+import ShareIcon from '@mui/icons-material/Share';
 import LibraryDialog from "./LibraryDialog";
 
 
@@ -117,6 +118,11 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
     const handleHome = () => {
         setDrawerMenuOpen(false);
         navigate('/');
+    }
+
+    const handleSharedWithMe = () => {
+        setDrawerMenuOpen(false);
+        navigate('/shared-with-me');
     }
 
     const [newLibraryDialogOpen, setNewLibraryDialogOpen] = useState(false);
@@ -212,6 +218,7 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
             <Divider />
             <List>
                 {[{"text": "Home", "icon": <HomeIcon />, "onClickHandler": handleHome},
+                  {"text": "Shared with me", "icon": <ShareIcon />, "onClickHandler": handleSharedWithMe},
                   {"text": "Profile", "icon": <ProfileIcon />, "onClickHandler": handleProfile},
                   {"text": "Settings", "icon": <SettingsIcon />, "onClickHandler": handleSettings}].map(({text, icon, onClickHandler}) => (
                     <ListItem key={text} disablePadding>

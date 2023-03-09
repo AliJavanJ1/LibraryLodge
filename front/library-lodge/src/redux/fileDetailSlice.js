@@ -35,6 +35,8 @@ const dummy = {
             1: 'Chvrches',
             2: '2015',
             3: 'Synthpop',
+        },
+        attachments: {
         }
     },
     3: {
@@ -71,6 +73,8 @@ const dummy = {
             1: 'Suzanne Collins',
             2: '2009',
             3: 'Young Adult',
+        },
+        attachments: {
         }
     },
     5: {
@@ -83,6 +87,8 @@ const dummy = {
             1: 'Suzanne Collins',
             2: '2010',
             3: 'Young Adult',
+        },
+        attachments: {
         }
     },
     6: {
@@ -95,6 +101,8 @@ const dummy = {
             1: 'Vincent van Gogh',
             2: '1889',
             3: 'Saint-Rémy-de-Provence',
+        },
+        attachments: {
         }
     },
     7: {
@@ -115,6 +123,38 @@ const dummy = {
                 name: 'Titanic.srt'
             }
         }
+    },
+    8: {
+        name: 'Clueless',
+        library: null,
+        size: 1200000345,
+        last_modified: '2022-01-01T00:00:00Z',
+        file_template: 2,
+        information: {
+            1: 'Amy Heckerling',
+            2: '1995',
+            3: 'Comedy',
+        },
+        attachments: {
+            1: {
+                id: 42145,
+                size: 12345,
+                name: 'Clueless.srt'
+            }
+        }
+    },
+    9: {
+        name: 'The Last of Us Part I',
+        library: null,
+        size: 1200000345,
+        last_modified: '2022-01-01T00:00:00Z',
+        file_template: 2,
+        information: {
+            2: '2022',
+            3: 'Action',
+        },
+        attachments: {
+        }
     }
 }
 
@@ -122,7 +162,7 @@ const initialState = {
     ...dummy,
 }
 
-const staticSlice = createSlice({
+const fileDetailSlice = createSlice({
     name: 'fileDetail',
     initialState,
     reducers: {
@@ -130,5 +170,5 @@ const staticSlice = createSlice({
     },
 })
 
-// export const {} = staticSlice.actions
-export default staticSlice.reducer
+export const {} = fileDetailSlice.actions
+export default fileDetailSlice.reducer

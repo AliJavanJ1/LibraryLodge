@@ -1,6 +1,7 @@
 import {configureStore} from "@reduxjs/toolkit";
 import staticReducer from "./staticSlice";
 import treeReducer from "./treeSlice";
+import sharedTreeReducer from "./sharedTreeSlice";
 import fileDetailReducer from "./fileDetailSlice";
 import libraryDetailReducer from "./libraryDetailSlice";
 import fileTemplateReducer from "./fileTemplateSlice";
@@ -69,6 +70,7 @@ const store = configureStore({
     reducer: {
         static: staticReducer,
         tree: treeReducer,
+        sharedTree: sharedTreeReducer,
         file_details: fileDetailReducer,
         library_details: libraryDetailReducer,
         file_templates: fileTemplateReducer,

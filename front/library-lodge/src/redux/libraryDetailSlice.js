@@ -10,6 +10,11 @@ const dummy = {
         name: 'Hunger Games',
         file_template: 3,
         last_modified: '2021-01-01T00:00:00Z',
+    },
+    3: {
+        name: 'The Last of Us',
+        file_template: 3,
+        last_modified: '2021-01-01T00:00:00Z',
     }
 }
 
