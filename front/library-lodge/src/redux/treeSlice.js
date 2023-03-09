@@ -16,11 +16,11 @@ const initialState = {
     ...dummy,
 }
 
-const staticSlice = createSlice({
+const treeSlice = createSlice({
     name: 'tree',
     initialState,
     reducers: {},
 })
 
-export const {} = staticSlice.actions
-export default staticSlice.reducer
+export const {} = treeSlice.actions
+export default treeSlice.reducer
