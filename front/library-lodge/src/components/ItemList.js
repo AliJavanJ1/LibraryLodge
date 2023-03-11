@@ -4,13 +4,15 @@ import {
 } from '@mui/x-data-grid-pro';
 import {Stack} from "@mui/material";
 import {useEffect, useMemo, useState} from "react";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import _ from "lodash";
 import {useLocationFileTemplate, useLocationItems} from "../utils";
 import prettyBytes from 'pretty-bytes';
 import {iconMap} from "../redux/fileTemplateSlice";
 import ListItemContextMenu from "./ListItemContextMenu";
 import Scrollbars from "react-custom-scrollbars-2";
+import {setFileDetail} from "../redux/envSlice";
+import {useNavigate} from "react-router-dom";
 
 const isFile = (row) => 'size' in row
 
@@ -112,6 +114,8 @@ const ItemList = ({libs: currLibs = [], files: currFiles = [], file_template = n
     const file_details = useSelector(state => state.file_details)
     const apiRef = useGridApiRef()
     const quickFilterInput = useSelector(state => state.env.quickFilterInput)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         let words = quickFilterInput.split(' ').filter(word => word !== '')
@@ -149,6 +153,19 @@ const ItemList = ({libs: currLibs = [], files: currFiles = [], file_template = n
         setListItemContextMenu(initialListItemContextMenu);
     };
 
+    const handleRowClick = (params) => {
+        console.log(params)
+        if (isFile(params.row)) {
+            dispatch(setFileDetail(params.row.id.split('_')[1]))
+        } else {
+            if(params.row.shared){
+                navigate('/shared-with-me/' + params.row.name)
+            }else{
+                navigate(params.row.name)
+            }
+        }
+    }
+
 
     return (
         <Stack sx={{
@@ -177,6 +194,8 @@ const ItemList = ({libs: currLibs = [], files: currFiles = [], file_template = n
                             onContextMenu: handleListItemContextMenu
                         },
                     }}
+
+                    onRowClick={handleRowClick}
                 />
             </Scrollbars>
             <ListItemContextMenu contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose}/>
