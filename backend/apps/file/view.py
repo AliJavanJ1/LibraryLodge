@@ -23,7 +23,7 @@ def validate_user(db, token):
 
 @router.post("/upload")
 async def upload_file(request: Request, file: UploadFile, upload_info: schemas.FileUpload, db=Depends(get_db)):
-    user_id = validate_user(db, request.headers['session'])
+    user_id = validate_user(db, request.cookies['session'])
     path = f'{os.getcwd()}/static/{file.filename}'
     async with aiofiles.open(path, 'wb+') as out_file:
         content = await file.read()
@@ -33,7 +33,7 @@ async def upload_file(request: Request, file: UploadFile, upload_info: schemas.F
 
 @router.post("/upload_attachment")
 async def upload_attachment(request: Request, file: UploadFile, upload_info: schemas.AttachmentUpload, db=Depends(get_db)):
-    user_id = validate_user(db, request.headers['session'])
+    user_id = validate_user(db, request.cookies['session'])
     path = f'{os.getcwd()}/static/{file.filename}'
     async with aiofiles.open(path, 'wb+') as out_file:
         content = await file.read()
@@ -44,7 +44,7 @@ async def upload_attachment(request: Request, file: UploadFile, upload_info: sch
 
 @router.get("/file/{file_id}", response_class=HTMLResponse)
 def get_file(request: Request, file_id: int, db=Depends(get_db)):
-    validate_user(db, request.headers['session'])
+    validate_user(db, request.cookies['session'])
     return crud.get_file(db, file_id, request)
 
 @router.get("/library/{library_id}", response_class=HTMLResponse)
@@ -55,12 +55,12 @@ def get_library(request: Request, token: str, library_id: int, db=Depends(get_db
 
 @router.post("/create/library")
 def create_Library(request: Request, library: schemas.CreateLibrary, db=Depends(get_db)):
-    user_id = validate_user(db, request.headers['session'])
+    user_id = validate_user(db, request.cookies['session'])
     return crud.create_library(db, library, user_id)
     
 @router.post("/create/file-template")
 def create_file_template(request: Request, fileTemplate: schemas.CreateFileTemplate, db=Depends(get_db)):
-    user_id = validate_user(db, request.headers['session'])
+    user_id = validate_user(db, request.cookies['session'])
     return crud.create_file_template(db, fileTemplate, user_id)
 
 @router.post("/create/file-templates")
@@ -76,25 +76,25 @@ def add_file_template_info(request: Request, token: str, body :schemas.AddFileTe
 
 @router.get("/download/{file_id}")
 def download_file(request: Request, file_id: int, db=Depends(get_db)):
-    validate_user(db, request.headers['session'])
+    validate_user(db, request.cookies['session'])
     return crud.download_file(file_id, db)
 
 @router.get("/all_files")
 def gets_all_files(request: Request, db=Depends(get_db)):
-    user_id = validate_user(db, request.headers['session'])
+    user_id = validate_user(db, request.cookies['session'])
     return crud.get_files(db, user_id)
 
 @router.get("/all_libraries")
 def get_all_libraries(request: Request, db=Depends(get_db)):
-    user_id = validate_user(db, request.headers['session'])
+    user_id = validate_user(db, request.cookies['session'])
     return crud.get_all_libraries(db, user_id)
 
 @router.delete("/delete_file/{file_id}")
 def delete_file(request: Request, file_id: int, db=Depends(get_db)):
-    user_id = validate_user(db, request.headers['session'])
+    user_id = validate_user(db, request.cookies['session'])
     return crud.delete_file(file_id, user_id, db)
 
 @router.delete("/delete_library/{library_id}")
 def delete_library(request: Request, library_id: int, db=Depends(get_db)):
-    user_id = validate_user(db, request.headers['session'])
+    user_id = validate_user(db, request.cookies['session'])
     return crud.delete_library(library_id, user_id, db)

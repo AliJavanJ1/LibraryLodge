@@ -17,7 +17,7 @@ import {iconMap} from "../../redux/fileTemplateSlice";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import prettyBytes from "pretty-bytes";
 import _ from "lodash";
-import {setFileDetail} from "../../redux/envSlice";
+import {setEditingFileDetail, setFileDetail} from "../../redux/envSlice";
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
@@ -114,7 +114,7 @@ const AttachmentEditField = ({label, attachment_id, formik}) => {
     )
 }
 
-const EditingFileDetails = ({fileId, setEditting}) => {
+const EditingFileDetails = ({fileId}) => {
     const initial_lib_id = _.last(useSelector(state => state.env.location))
     const library_details = useSelector(state => state.library_details)
     const fileTemplates = useSelector(store => store.file_templates)
@@ -145,6 +145,7 @@ const EditingFileDetails = ({fileId, setEditting}) => {
     })
 
     const formik = useFormik({
+        enableReinitialize: true,
         initialValues: initialState,
         validationSchema: Yup.object({
             file_template: Yup.string()
@@ -415,7 +416,7 @@ const EditingFileDetails = ({fileId, setEditting}) => {
                         if (fileId === -1) {
                             dispatch(setFileDetail('closed'))
                         } else
-                            setEditting(false)
+                            dispatch(setEditingFileDetail(false))
                     }
                     }>
                         Cancel

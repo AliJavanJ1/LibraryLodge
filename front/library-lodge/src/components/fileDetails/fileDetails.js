@@ -6,16 +6,16 @@ import ViewFileDetails from "./viewFileDetails";
 
 const FileDetails = () => {
     const fileDetailStatus = useSelector(store => store.env.fileDetail)
-    const [editing, setEditing] = useState(false)
+    const editing = useSelector(store => store.env.editingFileDetail)
 
 
     if (fileDetailStatus === 'closed') {
         return null
     } else {
         if (fileDetailStatus === -1 || editing) {
-            return <EditingFileDetails fileId={fileDetailStatus} setEditting={setEditing}/>
+            return <EditingFileDetails fileId={fileDetailStatus}/>
         } else {
-            return <ViewFileDetails fileId={fileDetailStatus} setEditing={setEditing}/>
+            return <ViewFileDetails fileId={fileDetailStatus}/>
         }
     }
 };

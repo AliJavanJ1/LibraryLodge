@@ -7,6 +7,7 @@ const initialState = {
     // fileDetail: 7,
     // fileDetail: -1,
     fileDetail: 'closed',
+    editingFileDetail: false,
     quickFilterInput: '',
 }
 
@@ -26,8 +27,11 @@ const staticSlice = createSlice({
         setQuickFilterInput(state, action) {
             state.quickFilterInput = action.payload
         },
+        setEditingFileDetail(state, action) {
+            state.editingFileDetail = action.payload
+        }
     },
 })
 
-export const {setLocation, setSettingDialogOpen, setFileDetail, setQuickFilterInput} = staticSlice.actions
+export const {setLocation, setSettingDialogOpen, setFileDetail, setQuickFilterInput, setEditingFileDetail} = staticSlice.actions
 export default staticSlice.reducer

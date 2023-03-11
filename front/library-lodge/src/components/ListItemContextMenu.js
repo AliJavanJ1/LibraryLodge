@@ -2,14 +2,24 @@ import {Box, Divider, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/mat
 import {Delete, Edit, Link, Share} from "@mui/icons-material";
 import {useState} from "react";
 import ShareDialog from "./ShareDialog";
+import {useDispatch, useSelector} from "react-redux";
+import {setEditingFileDetail, setFileDetail} from "../redux/envSlice";
 
 
-export default function ListItemContextMenu({contextMenu, handleClose, isFile=false}) {
-    const {open, mouseX, mouseY, id} = contextMenu;
+export default function ListItemContextMenu({contextMenu, handleClose}) {
+    const {open, mouseX, mouseY, id, isFile} = contextMenu;
     const [shareDialogOpen, setShareDialogOpen] = useState(false);
+    const file_details = useSelector((state) => state.file_details);
+    const dispatch = useDispatch();
 
     const handleEdit = () => {
-        console.log("id", id, "onEdit") // TODO: open edit dialog
+        console.log("id", id, "onEdit", isFile)
+        if(isFile){
+            dispatch(setEditingFileDetail(true))
+            dispatch(setFileDetail(id))
+        }else{
+            //todo: open library edit dialog
+        }
         handleClose()
     }
 

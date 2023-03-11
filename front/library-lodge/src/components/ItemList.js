@@ -11,7 +11,7 @@ import prettyBytes from 'pretty-bytes';
 import {iconMap} from "../redux/fileTemplateSlice";
 import ListItemContextMenu from "./ListItemContextMenu";
 import Scrollbars from "react-custom-scrollbars-2";
-import {setFileDetail} from "../redux/envSlice";
+import {setEditingFileDetail, setFileDetail} from "../redux/envSlice";
 import {useNavigate} from "react-router-dom";
 
 const isFile = (row) => 'size' in row
@@ -137,6 +137,7 @@ const ItemList = ({libs: currLibs = [], files: currFiles = [], file_template = n
     }
     const [listItemContextMenu, setListItemContextMenu] = useState(initialListItemContextMenu);
     const handleListItemContextMenu = (event) => {
+        const id = event.target.parentElement.dataset.id
         event.preventDefault();
         setListItemContextMenu(
             !listItemContextMenu.open
@@ -144,7 +145,8 @@ const ItemList = ({libs: currLibs = [], files: currFiles = [], file_template = n
                     mouseX: event.clientX + 2,
                     mouseY: event.clientY - 6,
                     open: true,
-                    id: 1,
+                    id: id.split('_')[1],
+                    isFile: id.split('_')[0] === 'file'
                 }
                 : initialListItemContextMenu,
         );
@@ -155,6 +157,7 @@ const ItemList = ({libs: currLibs = [], files: currFiles = [], file_template = n
 
     const handleRowClick = (params) => {
         if (isFile(params.row)) {
+            dispatch(setEditingFileDetail(false))
             dispatch(setFileDetail(params.row.id.split('_')[1]))
         } else {
             if(params.row.shared){
