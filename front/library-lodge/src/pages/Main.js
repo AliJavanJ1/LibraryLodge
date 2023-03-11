@@ -68,11 +68,11 @@ export default function Main() {
         mouseY: 0,
     }); // TODO: remove this and use it for List Items
 
-    // useEffectOnce(() => {
-    //     if (!profile) {
-    //         navigate('/login');
-    //     }
-    // });
+    useEffectOnce(() => {
+        if (!profile) {
+            navigate('/login');
+        }
+    });
     const handleListItemContextMenu = (event) => { // TODO: remove this and use it for List Items
         event.preventDefault();
         setListItemContextMenu(
