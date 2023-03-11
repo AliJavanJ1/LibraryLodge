@@ -5,7 +5,7 @@ import {iconMap} from "../../redux/fileTemplateSlice";
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import _ from "lodash";
 import prettyBytes from "pretty-bytes";
-import {setFileDetail} from "../../redux/envSlice";
+import {setEditingFileDetail, setFileDetail} from "../../redux/envSlice";
 import PlayerDialog from "../PlayerDialog";
 
 export const InformationField = ({label, value}) => {
@@ -83,7 +83,7 @@ const AttachmentField = ({label, attachment}) => {
 }
 
 
-const ViewFileDetails = ({fileId, setEditing}) => {
+const ViewFileDetails = ({fileId}) => {
     const file = useSelector(store => store.file_details[fileId])
     const fileTemplate = useSelector(store => store.file_templates[file.file_template])
     const library = useSelector(store => store.library_details[file.library])
@@ -238,7 +238,7 @@ const ViewFileDetails = ({fileId, setEditing}) => {
                         Close
                     </Button>
                     <Button variant={'outlined'} size={'small'} onClick={() => {
-                        setEditing(true)
+                        dispatch(setEditingFileDetail(true))
                     }}>
                         Edit
                     </Button>

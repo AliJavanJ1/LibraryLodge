@@ -6,7 +6,7 @@ const dummy = {
 
 const initialState = {
     'domain': 'http://localhost:3000',
-    'apiDomain': 'http://localhost:8080',
+    'apiDomain': 'http://localhost:8080/api',
     ...dummy,
 }
 
