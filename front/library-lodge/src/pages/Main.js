@@ -1,4 +1,4 @@
-import {Fragment, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import Header from "../components/Header";
 import {Navigate, Route, Routes, useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
@@ -7,7 +7,9 @@ import {Box, styled} from "@mui/material";
 import SettingDialog from "../components/settingDialog";
 import Dashboard from "./Dashboard";
 import ListItemContextMenu from "../components/ListItemContextMenu"; // TODO: remove this and use it for List Items
-import {useEffectOnce} from "react-use";
+import {useEffectOnce, useLocation} from "react-use";
+import {setLocation} from "../redux/envSlice";
+import _ from "lodash";
 
 
 const MainBody = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerMenuOpen' })(
@@ -29,6 +31,29 @@ const MainBody = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerM
     }),
 );
 
+const UpdateLocation = () => {
+    const {pathname} = useLocation();
+    const dispatch = useDispatch();
+    const libraryDetails = useSelector((state) => state.library_details);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const isShared = pathname.startsWith('/shared-with-me');
+        const pathname_without_shared = pathname.replace('/shared-with-me', '');
+        const path_parts = _.chain(pathname_without_shared.split('/')).compact().value();
+        const library_keys = _.map(path_parts, (path_part) => {
+            return _.findKey(libraryDetails, (library) => library.name.toLowerCase() === decodeURIComponent(path_part).toLowerCase()
+                && library.shared === isShared);
+        });
+        if (_.some(library_keys, (library_key) => library_key === undefined)) {
+            console.warn('Invalid path, redirecting to /')
+            navigate('/')
+            dispatch(setLocation([]))
+        }else{
+            dispatch(setLocation(library_keys))
+        }
+    }, [pathname]);
+}
 
 export default function Main() {
     const isLoggedIn = useSelector((state) => state.profile || true); // TODO: remove " || true"
@@ -43,11 +68,11 @@ export default function Main() {
         mouseY: 0,
     }); // TODO: remove this and use it for List Items
 
-    useEffectOnce(() => {
-        if (!profile) {
-            navigate('/login');
-        }
-    });
+    // useEffectOnce(() => {
+    //     if (!profile) {
+    //         navigate('/login');
+    //     }
+    // });
     const handleListItemContextMenu = (event) => { // TODO: remove this and use it for List Items
         event.preventDefault();
         setListItemContextMenu(
@@ -90,9 +115,10 @@ export default function Main() {
             >
                 <Menu setDrawerMenuOpen={setDrawerMenuOpen} drawerMenuOpen={drawerMenuOpen}/>
                 <MainBody drawerMenuOpen={drawerMenuOpen}>
+                    <UpdateLocation/>
                     <Routes>
-                        <Route path="/" element={<Dashboard/>}/>
-                        <Route path="shared-with-me" element={<Dashboard shared={true}/>}/>
+                        <Route path="shared-with-me/*" element={<Dashboard shared={true}/>}/>
+                        <Route path="/*" element={<Dashboard/>}/>
                     </Routes>
                 </MainBody>
             </Box>

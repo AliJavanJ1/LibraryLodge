@@ -14,20 +14,6 @@ const Dashboard = ({shared = false}) => {
     const {libs, files} = useLocationItems(shared)
     const file_template = useLocationFileTemplate(shared)
 
-    const data = [
-        {id: 1, name: 'MusicNoteOutlinedIcon', link: '#', type: 'MusicNoteOutlinedIcon'},
-        {id: 2, name: 'SlideshowOutlinedIcon', link: '#', type: 'SlideshowOutlinedIcon'},
-        {id: 3, name: 'MenuBookOutlinedIcon', link: '#', type: 'MenuBookOutlinedIcon'},
-        // {id: 4, name: 'TerminalOutlinedIcon', link: '#', type: 'TerminalOutlinedIcon'},
-        // {id: 5, name: 'InsertPhotoOutlinedIcon', link: '#', type: 'InsertPhotoOutlinedIcon'},
-        // {id: 6, name: 'PermMediaOutlinedIcon', link: '#', type: 'PermMediaOutlinedIcon'},
-        // {id: 7, name: 'MovieFilterOutlinedIcon', link: '#', type: 'MovieFilterOutlinedIcon'},
-        // {id: 8, name: 'LibraryBooksOutlinedIcon', link: '#', type: 'LibraryBooksOutlinedIcon'},
-        // {id: 9, name: 'FilterNoneOutlinedIcon', link: '#', type: 'FilterNoneOutlinedIcon'},
-        // {id: 10, name: 'LibraryMusicOutlinedIcon', link: '#', type: 'LibraryMusicOutlinedIcon'}
-    ]
-
-
     return (
         <Container maxWidth='xl'>
             <Stack direction={'row'} spacing={2}>
@@ -42,7 +28,7 @@ const Dashboard = ({shared = false}) => {
                             alignItems: 'center',
                         }}
                     >
-                        <BreadCrumbs data={data}/>
+                        <BreadCrumbs shared={shared}/>
                         <InputBase
                             placeholder="Filter..."
                             type="search"
