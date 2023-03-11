@@ -154,7 +154,6 @@ const ItemList = ({libs: currLibs = [], files: currFiles = [], file_template = n
     };
 
     const handleRowClick = (params) => {
-        console.log(params)
         if (isFile(params.row)) {
             dispatch(setFileDetail(params.row.id.split('_')[1]))
         } else {

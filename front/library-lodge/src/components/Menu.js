@@ -25,7 +25,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import EditProfileDialog from "./EditProfileDialog";
-import {setSettingDialogOpen} from "../redux/envSlice";
+import {setFileDetail, setSettingDialogOpen} from "../redux/envSlice";
 import ShareIcon from '@mui/icons-material/Share';
 import LibraryDialog from "./LibraryDialog";
 
@@ -130,6 +130,12 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
         setNewLibraryDialogOpen(true);
     }
 
+    const handleUpload = () => {
+        dispatch(setFileDetail(-1))
+        handleNewMenuClose();
+        setDrawerMenuOpen(false);
+    }
+
     return (
         <Drawer
             sx={{
@@ -191,7 +197,7 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
                         left: -8,
                     }}
                 >
-                    <MenuItem onClick={handleNewMenuClose} disableRipple>
+                    <MenuItem onClick={handleUpload} disableRipple>
                         <FileUploadIcon />
                         Upload New File
                     </MenuItem>
