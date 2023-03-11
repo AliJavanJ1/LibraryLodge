@@ -4,9 +4,9 @@ const initialState = {
     location: [],
     sharedLocation: [],
     settingDialogOpen: false,
-    fileDetail: 7,
+    // fileDetail: 7,
     // fileDetail: -1,
-    // fileDetail: 'closed',
+    fileDetail: 'closed',
     quickFilterInput: '',
 }
 
