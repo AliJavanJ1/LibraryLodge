@@ -5,7 +5,7 @@ import _ from "lodash";
 export function useLocationItems(shared = false){
     const location = useSelector(state => state.env.location)
     const tree = useSelector(state => shared ? state.sharedTree : state.tree)
-    console.log(tree, location)
+
     return useMemo(() => {
         let node = _.reduce(location, (node, loc) => node.libraries[loc], tree)
         return node ? {files: node.files, libs: _.keys(node.libraries)} : {files: [], libs: []}
