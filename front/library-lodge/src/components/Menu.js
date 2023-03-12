@@ -248,8 +248,7 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
                     </ListItemButton>
                 </ListItem>
             </List>
-            {profileDialogOpen
-             && <EditProfileDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)}/>}
+            {profileDialogOpen && <EditProfileDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)}/>}
             {error && <Alert severity="error" message={error} resetFunc={() => setError(null)}/>}
         </Drawer>
     )

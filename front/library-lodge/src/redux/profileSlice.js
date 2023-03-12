@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {initialState as staticIS} from './staticSlice'
+import {queries} from "@testing-library/react";
 
 const dummy = {
     "username": "test",
@@ -95,9 +96,14 @@ const logout = createAsyncThunk(
 
 const editProfile = createAsyncThunk(
     'profile/editProfile',
-    async (arg, {rejectWithValue, fulfillWithValue}) => {
+    async (arg, {rejectWithValue, fulfillWithValue, getState}) => {
         try {
-            const response = await fetch(staticIS.apiDomain + '/edit-profile/', {
+            const state = getState()
+            console.log("state", state)
+            console.log("data", arg)
+            const queries = "?" + new URLSearchParams(arg).toString()
+            console.log(queries)
+            const response = await fetch(staticIS.apiDomain + '/account/update_profile/' + state.profile.id + queries, {
                 method: 'PUT',
                 credentials: 'include',
                 accessControlAllowOrigin: staticIS.domain,
@@ -175,9 +181,15 @@ const staticSlice = createSlice({
     initialState,
     reducers: {
         resetProfile(state, action) {
-            console.log("resetProfile")
             state = initialState
             return state
+        },
+        updateProfile(state, action) {
+            console.log("setProfile", state)
+            console.log(action)
+            state.username = action.payload.username
+            state.email = action.payload.email
+            state.password = action.payload.password
         },
     },
     extraReducers: (builder) => {
@@ -208,6 +220,6 @@ const staticSlice = createSlice({
     }
 })
 
-export const {resetProfile} = staticSlice.actions
+export const {resetProfile, updateProfile} = staticSlice.actions
 export default staticSlice.reducer
 export {fetchProfileData, login, signUp, logout, editProfile, requestPasswordReset, resetPassword}
