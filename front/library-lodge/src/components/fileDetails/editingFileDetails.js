@@ -197,7 +197,6 @@ const EditingFileDetails = ({fileId}) => {
     const [fileUpload, setFileUpload] = useState({})
 
     const onSaveClick = () => {
-        console.log(fileUpload)
         const formik_data = formik.values
         const formData = new FormData();
         formData.append('file', fileUpload);
@@ -217,6 +216,7 @@ const EditingFileDetails = ({fileId}) => {
             }
         }).then(res => {
             console.log(res)
+            dispatch(setFileDetail('close'))
         })
     }
 
@@ -328,6 +328,7 @@ const EditingFileDetails = ({fileId}) => {
                                                 <FileUploadOutlinedIcon/>
                                                 <input type='file' hidden onChange={(e) => {
                                                     setFileUpload(e.target.files[0])
+                                                    formik.setFieldValue('name', e.target.files[0].name)
                                                 }}/>
                                             </IconButton>
                                         </Tooltip>
