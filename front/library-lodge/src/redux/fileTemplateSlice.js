@@ -163,7 +163,7 @@ const staticSlice = createSlice({
                     libIcon: value.lib_icon,
                 }
             })
-            console.log('fileTemplateSlice', converted)
+            // console.log('fileTemplateSlice', converted)
             return converted
         })
     }
