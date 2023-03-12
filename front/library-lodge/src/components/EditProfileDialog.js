@@ -4,7 +4,7 @@ import EditablePasswordField from "./EditablePasswordField";
 import {useDispatch, useSelector} from "react-redux";
 import {useFormik} from "formik";
 import * as Yup from "yup";
-import {editProfile, fetchProfileData} from "../redux/profileSlice";
+import {editProfile, updateProfile} from "../redux/profileSlice";
 import React, {useEffect, useState} from "react";
 import Alert from "./Alert";
 
@@ -13,32 +13,36 @@ export default function EditProfileDialog({open, onClose}) {
     const [alert, setAlert] = useState(null);
     const dispatch = useDispatch();
     const profile = useSelector((state) => state.profile);
-    const [usernameIsEditing, setUsernameIsEditing] = useState(false);
-    const [emailIsEditing, setEmailIsEditing] = useState(false);
-    const [passwordIsEditing, setPasswordIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState({
+        usernameIsEditing: false,
+        emailIsEditing: false,
+        passwordIsEditing: false,
+    })
     const formik = useFormik({
         validateOnMount: true,
         initialValues: {
-            username: profile.username,
-            email: profile.email,
+            username: profile ? profile.username: "",
+            email: profile ? profile.email : "",
             old_password: '',
             password: '',
             password_confirmation: '',
         },
         validationSchema: Yup.object({
-            username: usernameIsEditing
+            username: isEditing.usernameIsEditing
                       ? Yup.string().required('Required')
                       : Yup.string(),
-            email: emailIsEditing
+            email: isEditing.emailIsEditing
                    ? Yup.string().email('Invalid email address').required('Required')
                    : Yup.string(),
-            old_password: passwordIsEditing
-                          ? Yup.string().required('Required')
+            old_password: isEditing.passwordIsEditing
+                          ? Yup.string()
+                               .required('Required')
+                               .oneOf(profile ? [profile.password] : [], 'Passwords is wrong')
                           : Yup.string(),
-            password: passwordIsEditing
+            password: isEditing.passwordIsEditing
                       ? Yup.string().required('Required')
                       : Yup.string(),
-            password_confirmation: passwordIsEditing
+            password_confirmation: isEditing.passwordIsEditing
                                    ? Yup.string()
                                         .required('Required')
                                         .oneOf([Yup.ref('password'), null],
@@ -47,54 +51,61 @@ export default function EditProfileDialog({open, onClose}) {
         }),
         onSubmit: values => {
             const result = {};
-            if (usernameIsEditing) {
-                result.username = values.username;
-            }
-            if (emailIsEditing) {
-                result.email = values.email;
-            }
-            if (passwordIsEditing) {
-                result.old_password = values.old_password;
-                result.new_password = values.password;
-            }
-            dispatch(editProfile(result))
+            result.username = isEditing.usernameIsEditing ? values.username : profile.username;
+            result.email = isEditing.emailIsEditing ? values.email : profile.email;
+            result.password = isEditing.passwordIsEditing ? values.password : profile.password;
+            dispatch(editProfile(result)).unwrap()
                 .then((res) => {
-                    if (res.payload && res.meta.requestStatus) {
-                        // dispatch(fetchProfileData()) // TODO: should we fetch profile data here?
-                        // TODO show success message
-                        handleClose();
-                    } else {
-                        setAlert({"severity": "error",
-                                        "message": res.payload ? res.payload.data : res.error.message});
-                    }
-                });
+                    console.log("Edit Profile", res)
+                    setAlert({"severity": "success",
+                                    "message": res.message});
+                    dispatch(updateProfile(result))
+                    handleClose();
+                })
+                .catch((message) => {
+                    setAlert({"severity": "error",
+                                    "message": message});
+                })
 
         },
     });
 
     useEffect(() => {
-        if(!usernameIsEditing) {
-            formik.setFieldValue('username', profile.username);
+        if(!isEditing.usernameIsEditing && formik.values.username !== (profile ? profile.username : "")) {
+            formik.setFieldValue('username', profile ? profile.username : "");
         }
-        if(!emailIsEditing) {
-            formik.setFieldValue('email', profile.email);
+        if(!isEditing.emailIsEditing && formik.values.email !== (profile ? profile.email : "")) {
+            formik.setFieldValue('email', profile ? profile.email : "");
         }
-        if(!passwordIsEditing) {
+        if(!isEditing.passwordIsEditing
+           && formik.values.old_password !== ''
+           && formik.values.password !== ''
+           && formik.values.password_confirmation !== '') {
             formik.setFieldValue('old_password', '');
             formik.setFieldValue('password', '');
             formik.setFieldValue('password_confirmation', '');
         }
-    }, [usernameIsEditing, emailIsEditing, passwordIsEditing, profile.username, profile.email]);
+    }, [isEditing, profile]);
+
+    useEffect(() => {
+        if (open) {
+            formik.resetForm()
+        }
+    }, [open]);
 
     const handleClose = () => {
-        setUsernameIsEditing(false);
-        setEmailIsEditing(false);
-        setPasswordIsEditing(false);
+        setIsEditing({
+            usernameIsEditing: false,
+            emailIsEditing: false,
+            passwordIsEditing: false
+        })
         onClose();
     }
 
     return (
         <Dialog
+            component="form"
+            onSubmit={formik.handleSubmit}
             open={open}
             onClose={onClose}
             fullScreen={false}
@@ -107,14 +118,8 @@ export default function EditProfileDialog({open, onClose}) {
             <DialogTitle>
                 Profile
             </DialogTitle>
-            <form onSubmit={formik.handleSubmit}>
                 <DialogContent
                     dividers
-                    sx={{
-                        '&:first-child': {
-                            paddingY: 0,
-                        }
-                    }}
                 >
                     <EditableText
                         label="Username"
@@ -124,8 +129,8 @@ export default function EditProfileDialog({open, onClose}) {
                         name="username"
                         error={formik.touched.username && Boolean(formik.errors.username)}
                         helperText={formik.touched.username && formik.errors.username}
-                        isEditing={usernameIsEditing}
-                        setIsEditing={setUsernameIsEditing}
+                        isEditing={isEditing.usernameIsEditing}
+                        setIsEditing={(value) => setIsEditing({...isEditing, usernameIsEditing: value})}
                     />
                     <EditableText
                         label="Email"
@@ -135,8 +140,8 @@ export default function EditProfileDialog({open, onClose}) {
                         name="email"
                         error={formik.touched.email && Boolean(formik.errors.email)}
                         helperText={formik.touched.email && formik.errors.email}
-                        isEditing={emailIsEditing}
-                        setIsEditing={setEmailIsEditing}
+                        isEditing={isEditing.emailIsEditing}
+                        setIsEditing={(value) => setIsEditing({...isEditing, emailIsEditing: value})}
                     />
                 </DialogContent>
                 <DialogTitle>
@@ -144,15 +149,10 @@ export default function EditProfileDialog({open, onClose}) {
                 </DialogTitle>
                 <DialogContent
                     dividers
-                    sx={{
-                        '&:first-child': {
-                            paddingY: 0,
-                        }
-                    }}
                 >
                     <EditablePasswordField
-                        isEditing={passwordIsEditing}
-                        setIsEditing={setPasswordIsEditing}
+                        isEditing={isEditing.passwordIsEditing}
+                        setIsEditing={(value) => setIsEditing({...isEditing, passwordIsEditing: value})}
                         current_password_value={formik.values.old_password}
                         current_password_onChange={formik.handleChange}
                         current_password_error={formik.touched.old_password && Boolean(formik.errors.old_password)}
@@ -180,7 +180,6 @@ export default function EditProfileDialog({open, onClose}) {
                         Submit
                     </Button>
                 </DialogActions>
-            </form>
             {alert && <Alert severity={alert.severity}
                                       message={alert.message}
                                       resetFunc={() => setAlert(null)}/>}
