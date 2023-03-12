@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import React, {useEffect, useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {iconMap} from "../../redux/fileTemplateSlice";
+import {fetchFileTemplates, iconMap} from "../../redux/fileTemplateSlice";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import prettyBytes from "pretty-bytes";
 import _ from "lodash";
@@ -27,6 +27,9 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {initialState as staticIS} from "../../redux/staticSlice";
 import axios from "axios";
+import {fetchLibraryDetails} from "../../redux/libraryDetailSlice";
+import {fetchFileDetails} from "../../redux/fileDetailSlice";
+import {buildTree} from "../../redux/treeSlice";
 
 const InformationEditField = ({label, info_id, formik}) => {
     return (
@@ -215,8 +218,14 @@ const EditingFileDetails = ({fileId}) => {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(res => {
-            console.log(res)
-            dispatch(setFileDetail('close'))
+            dispatch(setFileDetail('closed'))
+            dispatch(fetchFileTemplates()).then((res)=>{
+                dispatch(fetchLibraryDetails()).then((res)=>{
+                    dispatch(fetchFileDetails()).then((res)=>{
+                        dispatch(buildTree())
+                    })
+                })
+            })
         })
     }
 
