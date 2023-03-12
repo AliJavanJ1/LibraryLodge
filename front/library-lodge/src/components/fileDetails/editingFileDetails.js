@@ -25,6 +25,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import {InformationField} from "./viewFileDetails";
 import {useFormik} from "formik";
 import * as Yup from "yup";
+import {initialState as staticIS} from "../../redux/staticSlice";
+import axios from "axios";
 
 const InformationEditField = ({label, info_id, formik}) => {
     return (
@@ -93,7 +95,10 @@ const AttachmentEditField = ({label, attachment_id, formik}) => {
                 formik.values.attachments[attachment_id].name ?
                     <Stack direction={'row'}>
                         <Tooltip title={formik.values.attachments[attachment_id].name} placement={'right'} arrow>
-                            <IconButton size={'small'}>
+                            <IconButton size={'small'} onClick={() => {
+                                const link = staticIS.apiDomain + '/dashboard/download/' + attachment_id
+                                window.open(link, '_blank')
+                            }}>
                                 <FileDownloadOutlinedIcon/>
                             </IconButton>
                         </Tooltip>
@@ -188,6 +193,32 @@ const EditingFileDetails = ({fileId}) => {
     })
     const dispatch = useDispatch()
 
+    ////////////////
+    const [fileUpload, setFileUpload] = useState({})
+
+    const onSaveClick = () => {
+        const formik_data = formik.values
+        const formData = new FormData();
+        formData.append('file', fileUpload);
+        formData.append('upload_info', JSON.stringify({
+            // desc is size of file
+            "desc":  fileUpload.size.toString(),
+            "extra_info": formik_data.information,
+            "attachments": {},
+            "library_id": formik_data.library ? formik_data.library : null,
+            "file_template_id": _.parseInt(formik_data.file_template),
+        })
+        );
+        axios.post(staticIS.apiDomain + '/dashboard/upload', formData, {
+            withCredentials: true,
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(res => {
+            console.log(res)
+            dispatch(setFileDetail('close'))
+        })
+    }
 
     return (
         <Paper elevation={5} sx={{
@@ -278,7 +309,10 @@ const EditingFileDetails = ({fileId}) => {
                                     formik.values.name ?
                                         <Stack direction={'row'}>
                                             <Tooltip title={'Download'} enterDelay={500} placement={"top"}>
-                                                <IconButton sx={{}}>
+                                                <IconButton sx={{}} onClick={() => {
+                                                    const link = staticIS.apiDomain + '/dashboard/download/' + fileId
+                                                    window.open(link, '_blank')
+                                                }}>
                                                     <FileDownloadOutlinedIcon/>
                                                 </IconButton>
                                             </Tooltip>
@@ -290,8 +324,12 @@ const EditingFileDetails = ({fileId}) => {
                                         </Stack>
                                         :
                                         <Tooltip title={'Upload'} enterDelay={500} placement={"top"}>
-                                            <IconButton sx={{}}>
+                                            <IconButton component={'label'} sx={{}}>
                                                 <FileUploadOutlinedIcon/>
+                                                <input type='file' hidden onChange={(e) => {
+                                                    setFileUpload(e.target.files[0])
+                                                    formik.setFieldValue('name', e.target.files[0].name)
+                                                }}/>
                                             </IconButton>
                                         </Tooltip>
                                 }
@@ -421,11 +459,10 @@ const EditingFileDetails = ({fileId}) => {
                     }>
                         Cancel
                     </Button>
-                    <Button variant={'outlined'} size={'small'}>
+                    <Button variant={'outlined'} size={'small'} onClick={onSaveClick}>
                         Save
                     </Button>
                 </Stack>
-
             </Stack>
         </Paper>
     );
