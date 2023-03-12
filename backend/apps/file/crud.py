@@ -8,6 +8,8 @@ from fastapi.templating import Jinja2Templates
 from uuid import uuid4
 from fastapi.responses import FileResponse
 import os
+from datetime import datetime
+import time
 
 from . import models, schemas
 
@@ -15,6 +17,10 @@ templates = Jinja2Templates(directory="templates")
 
 
 def upload_file(db, user_id, file_name, file_type, file_upload_info: schemas.FileUpload):
+    dt = datetime.now()
+    ts = datetime.timestamp(dt)
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S", datetime.now().timetuple())
+
     if file_type == "FILE":
         db_file = models.File(
             user_id=user_id,
@@ -23,7 +29,8 @@ def upload_file(db, user_id, file_name, file_type, file_upload_info: schemas.Fil
             desc = file_upload_info.desc,
             extra_info = file_upload_info.extra_info,
             attachments = file_upload_info.attachments,
-            file_template_id = file_upload_info.file_template_id,
+            create_date=stamp,
+            file_template_id = file_upload_info.file_template_id
         )
     elif file_type == "ATTACHMENT":
         db_file = models.File(
@@ -54,11 +61,15 @@ def save_library_file_relation(db: Session, file_id: int, library_id: int):
 
 
 def create_library(db: Session, library: schemas.CreateLibrary, user_id: int):
+    dt = datetime.now()
+    ts = datetime.timestamp(dt)
+    stamp = time.strftime("%Y-%m-%d %H:%M:%S", datetime.now().timetuple())
+
     db_library = models.Library(
         name=library.name,
         user_id=user_id,
         file_template_id=library.file_template_id,
-
+        create_date=stamp
     )
     db.add(db_library)
     db.commit()
@@ -89,7 +100,7 @@ def get_file_templates(db: Session, user_id: int):
     return file_templates
 
 def add_file_template_info(db: Session, user_id: int, info: schemas.AddFileTemplateInfo):
-    file_template = db.query(models.FileTemplate).filter(models.FileTemplate.id == attachment_type.file_template_id 
+    file_template = db.query(models.FileTemplate).filter(models.FileTemplate.id == info.file_template_id 
                                                 and models.FileTemplate.user_id == user_id).one()
     if info.is_attachment_type:
         file_template.attachments[info.id] = info.name

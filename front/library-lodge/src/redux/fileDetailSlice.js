@@ -204,12 +204,20 @@ const fileDetailSlice = createSlice({
                     library: value.library_id,
                     last_modified: value.create_date,
                     file_template: value.file_template_id,
-                    size: value.desc,
+                    size: _.parseInt(value.desc),
                     information: value.extra_info,
-                    attachments: value.attachments,
+                    attachments: _.reduce(value.attachments, (result, attachment_file_id, attachment_id) => {
+                        const attachment = _.find(action.payload, (file) => file.id === attachment_file_id)
+                        result[attachment_id] = {
+                            id: attachment.id,
+                            size: _.parseInt(attachment.desc ? attachment.desc : 0),
+                            name: attachment.name,
+                        }
+                        return result
+                    }, {}),
                 }
             })
-            console.log('fileDetailSlice', converted)
+            // console.log('fileDetailSlice', converted)
             return converted
         })
     }

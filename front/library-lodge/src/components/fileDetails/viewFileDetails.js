@@ -7,6 +7,7 @@ import _ from "lodash";
 import prettyBytes from "pretty-bytes";
 import {setEditingFileDetail, setFileDetail} from "../../redux/envSlice";
 import PlayerDialog from "../PlayerDialog";
+import {initialState as staticIS} from "../../redux/staticSlice";
 
 export const InformationField = ({label, value}) => {
     return (
@@ -73,7 +74,8 @@ const AttachmentField = ({label, attachment}) => {
             </Tooltip>
             <Tooltip title={attachment.name} placement={'right'} arrow>
                 <IconButton size={'small'} onClick={() => {
-                    //todo: download attachment
+                    const link = staticIS.apiDomain + '/dashboard/download/' + attachment.id
+                    window.open(link, '_blank')
                 }}>
                     <FileDownloadOutlinedIcon/>
                 </IconButton>
@@ -145,7 +147,8 @@ const ViewFileDetails = ({fileId}) => {
                                     mx: 1,
                                     color: 'white'
                                 }} onClick={() => {
-                                    // todo: download file
+                                    const link = staticIS.apiDomain + '/dashboard/download/' + fileId
+                                    window.open(link, '_blank')
                                 }}>
                                     <FileDownloadOutlinedIcon/>
                                 </IconButton>
