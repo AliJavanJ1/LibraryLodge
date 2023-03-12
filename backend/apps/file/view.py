@@ -58,10 +58,10 @@ def create_Library(request: Request, library: schemas.CreateLibrary, db=Depends(
     user_id = validate_user(db, request.cookies['session'])
     return crud.create_library(db, library, user_id)
     
-@router.post("/create/file-template")
-def create_file_template(request: Request, fileTemplate: schemas.CreateFileTemplate, db=Depends(get_db)):
+@router.post("/edit/file-template")
+def create_file_template(request: Request, fileTemplate: schemas.EditFileTemplate, db=Depends(get_db)):
     user_id = validate_user(db, request.cookies['session'])
-    return crud.create_file_template(db, fileTemplate, user_id)
+    return crud.edit_file_template(db, fileTemplate, user_id)
 
 @router.get("/file-templates")
 def get_all_file_templates(request: Request, db=Depends(get_db)):

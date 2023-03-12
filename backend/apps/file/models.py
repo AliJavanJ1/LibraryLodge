@@ -32,6 +32,9 @@ class FileTemplate(Base):
     name = Column(String)
     attachments = Column(JSON)
     extra_informations = Column(JSON)
+    icon = Column(String)
+    lib_icon = Column(String)
+    
 
 class FileLibrary(Base):
     __tablename__ = "filelibraries"

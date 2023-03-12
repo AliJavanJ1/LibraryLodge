@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from array import *
 from uuid import uuid4
 from fastapi import FastAPI, HTTPException
 from sqlalchemy import desc
@@ -63,12 +64,19 @@ def create_library(db: Session, library: schemas.CreateLibrary, user_id: int):
     db.refresh(db_library)
     return db_library.id
 
-def create_file_template(db: Session, fileTemplate: schemas.CreateFileTemplate, user_id: int):
+def edit_file_template(db: Session, file_template: schemas.EditFileTemplate, user_id: int):
+    db.query(models.FileTemplate).filter(models.FileTemplate.id == file_template.id).update(
+        {models.FileTemplate.attachments: file_template.attachments, models.FileTemplate.extra_informations: file_template.extra_info})
+    db.commit()
+
+def create_file_template(db: Session, name: str, icon: str, libIcon: str, information: array, attachments: array, user_id: int):
     db_file_template = models.FileTemplate(
-        name = fileTemplate.name,
+        name = name,
         user_id = user_id,
-        attachments = fileTemplate.attachments,
-        extra_informations = fileTemplate.extra_info
+        attachments = attachments,
+        extra_informations = information,
+        icon = icon,
+        lib_icon = libIcon
     )
     db.add(db_file_template)
     db.commit()
@@ -171,3 +179,10 @@ def delete_library(library_id: int, user_id: int, db: Session):
     db.commit()
     return {"message": "library deleted successfully."}
 
+
+def set_file_templates(db: Session, user_id: int):
+    create_file_template(db, 'Music', 'MusicNoteOutlinedIcon', 'LibraryMusicOutlinedIcon', ['Singer','Year','Genre'], ['Cover','Lyrics'],user_id)
+    create_file_template(db, 'Movie', 'SlideshowOutlinedIcon', 'MovieFilterOutlinedIcon', ['Director','Year','Genre'], ['Subtitle','Audio'],user_id)
+    create_file_template(db, 'Book', 'MenuBookOutlinedIcon', 'LibraryBooksOutlinedIcon', ['Author','Year','Genre'], ['Cover','Summary'],user_id)
+    create_file_template(db, 'Software', 'TerminalOutlinedIcon', 'FilterNoneOutlinedIcon', ['Developer','Version'], ['Patch'],user_id)
+    create_file_template(db, 'Picture', 'InsertPhotoOutlinedIcon', 'PermMediaOutlinedIcon', ['Photographer','Date','Place'], [],user_id)
