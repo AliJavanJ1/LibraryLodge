@@ -1,4 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {initialState as staticIS} from "./staticSlice";
+import _ from 'lodash'
 
 const dummy = {
     1: {
@@ -158,6 +160,31 @@ const dummy = {
     }
 }
 
+const fetchFileDetails = createAsyncThunk(
+    'fileDetail/fetchFileDetails',
+    async (input, {
+        rejectWithValue,
+        fulfillWithValue,
+    }) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/dashboard/all_files', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(input),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.status)
+            }
+            return fulfillWithValue(await response.json())
+        } catch (e) {
+            return rejectWithValue(e.message)
+        }
+    }
+)
+
 const initialState = {
     ...dummy,
 }
@@ -166,9 +193,28 @@ const fileDetailSlice = createSlice({
     name: 'fileDetail',
     initialState,
     reducers: {
-
     },
+    extraReducers: (builder) => {
+        builder.addCase(fetchFileDetails.fulfilled, (state, action) => {
+            const raw = action.payload.filter((file) => file.type !== 'ATTACHMENT')
+            const converted = {}
+            _.forEach(raw, (value) => {
+                converted[value.id] = {
+                    name: value.name,
+                    library: value.library_id,
+                    last_modified: value.create_date,
+                    file_template: value.file_template_id,
+                    size: value.desc,
+                    information: value.extra_info,
+                    attachments: value.attachments,
+                }
+            })
+            console.log('fileDetailSlice', converted)
+            return converted
+        })
+    }
 })
 
+export {fetchFileDetails}
 export const {} = fileDetailSlice.actions
 export default fileDetailSlice.reducer

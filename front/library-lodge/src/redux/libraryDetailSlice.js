@@ -1,4 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit'
+import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
+import {initialState as staticIS} from "./staticSlice";
+import _ from 'lodash'
 
 const dummy = {
     1: {
@@ -21,6 +23,31 @@ const dummy = {
     }
 }
 
+const fetchLibraryDetails = createAsyncThunk(
+    'libraryDetail/fetchLibraryDetails',
+    async (input, {
+        rejectWithValue,
+        fulfillWithValue,
+    }) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/dashboard/all_libraries', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(input),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.status)
+            }
+            return fulfillWithValue(await response.json())
+        } catch (e) {
+            return rejectWithValue(e.message)
+        }
+    }
+)
+
 const initialState = {
     ...dummy,
 }
@@ -28,10 +55,25 @@ const initialState = {
 const staticSlice = createSlice({
     name: 'libraryDetail',
     initialState,
-    reducers: {
-
-    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(fetchLibraryDetails.fulfilled, (state, action) => {
+            const raw = action.payload
+            const converted = {}
+            _.forEach(raw, (value) => {
+                converted[value.id] = {
+                    name: value.name,
+                    file_template: value.file_template_id,
+                    last_modified: value.create_date,
+                    shared: value.shared,
+                }
+            })
+            console.log('fetchLibraryDetails', converted)
+            return converted
+        })
+    }
 })
 
+export {fetchLibraryDetails}
 export const {} = staticSlice.actions
 export default staticSlice.reducer
