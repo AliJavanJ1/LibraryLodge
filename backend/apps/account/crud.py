@@ -2,8 +2,8 @@ from sqlalchemy.orm import Session
 from uuid import uuid4
 from sqlalchemy import desc
 from fastapi.templating import Jinja2Templates
-import asyncpg
 from . import models, schemas
+from ..file import crud as file_crud
 
 
 def is_user(db: Session, token: str):
@@ -28,6 +28,9 @@ def create_user(db: Session, user: schemas.RegisterUser):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+    
+    file_crud.set_file_templates(db, db_user.id)
+
     return login(db, db_user.id)
 
 def get_user_by_username(db: Session, username: str):

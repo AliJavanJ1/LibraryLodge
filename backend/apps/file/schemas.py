@@ -42,6 +42,11 @@ class CreateFileTemplate(BaseModel):
     attachments: list
     extra_info: list
 
+class EditFileTemplate(BaseModel):
+    id: int
+    attachments: list
+    extra_info: list 
+    
 class AddFileTemplateInfo(BaseModel):
     file_template_id: int
     is_attachment_type: bool
