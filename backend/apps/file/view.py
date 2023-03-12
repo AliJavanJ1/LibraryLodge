@@ -63,9 +63,9 @@ def create_file_template(request: Request, fileTemplate: schemas.CreateFileTempl
     user_id = validate_user(db, request.cookies['session'])
     return crud.create_file_template(db, fileTemplate, user_id)
 
-@router.post("/create/file-templates")
-def get_all_file_templates(request: Request, token: str, db=Depends(get_db)):
-    user_id = validate_user(db, token)
+@router.get("/file-templates")
+def get_all_file_templates(request: Request, db=Depends(get_db)):
+    user_id = validate_user(db, request.cookies['session'])
     return crud.get_file_templates(db, user_id)
 
 @router.put("/append/file-template-info")
