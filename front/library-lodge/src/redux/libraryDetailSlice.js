@@ -68,7 +68,7 @@ const staticSlice = createSlice({
                     shared: value.shared,
                 }
             })
-            console.log('fetchLibraryDetails', converted)
+            // console.log('fetchLibraryDetails', converted)
             return converted
         })
     }
