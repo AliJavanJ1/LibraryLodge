@@ -23,13 +23,14 @@ def upload_file(db, user_id, file_name, file_type, file_upload_info: schemas.Fil
             desc = file_upload_info.desc,
             extra_info = file_upload_info.extra_info,
             attachments = file_upload_info.attachments,
-            file_template_id = file_upload_info.file_template_id
+            file_template_id = file_upload_info.file_template_id,
         )
     elif file_type == "ATTACHMENT":
         db_file = models.File(
             user_id=user_id,
             name=file_name,
-            type=file_type
+            type=file_type,
+            desc = file_upload_info.desc,
         )
 
     db.add(db_file)
@@ -114,18 +115,18 @@ def get_file(db: Session, file_id: int, request):
     desc = file.desc
     extra_info = file.extra_info
     attachments = file.attachments
-
-    return templates.TemplateResponse(
-        "page.html",
-        {
-            "request": request,
-            "file_path": file_path,
-            "desc": desc,
-            "extra_info": extra_info,
-            "attachments": attachments,
-            "user_id": user_id
-        }
-    )
+    library_id = db.query(models.FileLibrary).filter(models.FileLibrary.file_id == file_id).first()
+    return {
+        "file_path": file_path,
+        "desc": desc,
+        "extra_info": extra_info,
+        "attachments": attachments,
+        "user_id": user_id,
+        "file_template_id": file.file_template_id,
+        'library': library_id if library_id else None,
+        'create_date': file.create_date,
+        'shared': False
+    }
 
 def download_file(file_id: int, db: Session ):
     file = db.query(models.File).filter(models.File.id == file_id).first()
@@ -137,6 +138,9 @@ def download_file(file_id: int, db: Session ):
 
 def get_files(db: Session, user_id: int):
     files = db.query(models.File).filter(models.File.user_id == user_id).all()
+    for file in files:
+        library_id = db.query(models.FileLibrary).filter(models.FileLibrary.file_id == file.id).first()
+        file.library_id = library_id.lib_id if library_id else None
     return files
 
 def get_library(db: Session, user_id: int, library_id: int, request):
@@ -148,18 +152,17 @@ def get_library(db: Session, user_id: int, library_id: int, request):
     name = library.name
     createDate = library.create_date
 
-    return templates.TemplateResponse(
-        "page.html",
-        {
-            "request": request,
-            "name": name,
-            "file_template_id": file_template_id,
-            "created_at": createDate
-        }
-    )
+    return {
+        "name": name,
+        "file_template_id": file_template_id,
+        "last_modified": createDate,
+        'shared': False,
+    }
 
 def get_all_libraries(db: Session, user_id: int):
     libraries = db.query(models.Library).filter(models.Library.user_id == user_id).all()
+    for library in libraries:
+        library.shared = False
     return libraries
 
 
@@ -181,8 +184,8 @@ def delete_library(library_id: int, user_id: int, db: Session):
 
 
 def set_file_templates(db: Session, user_id: int):
-    create_file_template(db, 'Music', 'MusicNoteOutlinedIcon', 'LibraryMusicOutlinedIcon', ['Singer','Year','Genre'], ['Cover','Lyrics'],user_id)
-    create_file_template(db, 'Movie', 'SlideshowOutlinedIcon', 'MovieFilterOutlinedIcon', ['Director','Year','Genre'], ['Subtitle','Audio'],user_id)
-    create_file_template(db, 'Book', 'MenuBookOutlinedIcon', 'LibraryBooksOutlinedIcon', ['Author','Year','Genre'], ['Cover','Summary'],user_id)
-    create_file_template(db, 'Software', 'TerminalOutlinedIcon', 'FilterNoneOutlinedIcon', ['Developer','Version'], ['Patch'],user_id)
-    create_file_template(db, 'Picture', 'InsertPhotoOutlinedIcon', 'PermMediaOutlinedIcon', ['Photographer','Date','Place'], [],user_id)
+    create_file_template(db, 'Music', 'MusicNoteOutlinedIcon', 'LibraryMusicOutlinedIcon', {1: 'Singer',2: 'Year',3: 'Genre'}, {1: 'Cover',2: 'Lyrics'},user_id)
+    create_file_template(db, 'Movie', 'SlideshowOutlinedIcon', 'MovieFilterOutlinedIcon', {1: 'Director',2: 'Year',3: 'Genre'}, {1: 'Subtitle',2: 'Audio'},user_id)
+    create_file_template(db, 'Book', 'MenuBookOutlinedIcon', 'LibraryBooksOutlinedIcon', {1: 'Author',2: 'Year',3: 'Genre'}, {1: 'Cover',2: 'Summary'},user_id)
+    create_file_template(db, 'Software', 'TerminalOutlinedIcon', 'FilterNoneOutlinedIcon', {1: 'Developer',2: 'Version'}, {1: 'Patch'},user_id)
+    create_file_template(db, 'Picture', 'InsertPhotoOutlinedIcon', 'PermMediaOutlinedIcon', {1: 'Photographer',2: 'Date',3: 'Place'}, {},user_id)

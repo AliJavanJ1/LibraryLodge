@@ -9,6 +9,8 @@ import TerminalOutlinedIcon from '@mui/icons-material/TerminalOutlined';
 import FilterNoneOutlinedIcon from '@mui/icons-material/FilterNoneOutlined';
 import MusicNoteOutlinedIcon from '@mui/icons-material/MusicNoteOutlined';
 import LibraryMusicOutlinedIcon from '@mui/icons-material/LibraryMusicOutlined';
+import {initialState as staticIS} from './staticSlice'
+import _ from 'lodash'
 
 const postInformationFieldRemove = createAsyncThunk(
     'fileTemplate/postInformationFieldRemove',
@@ -115,6 +117,31 @@ export const iconMap = {
     'LibraryMusicOutlinedIcon': LibraryMusicOutlinedIcon,
 }
 
+const fetchFileTemplates = createAsyncThunk(
+    'fileTemplate/fetchFileTemplates',
+    async (input, {
+        rejectWithValue,
+        fulfillWithValue,
+    }) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/dashboard/file-templates', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(input),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.status)
+            }
+            return fulfillWithValue(await response.json())
+        } catch (e) {
+            return rejectWithValue(e.message)
+        }
+    }
+)
+
 const initialState = {
     ...dummy,
 }
@@ -123,7 +150,24 @@ const staticSlice = createSlice({
     name: 'fileTemplate',
     initialState,
     reducers: {},
+    extraReducers: (builder) => {
+        builder.addCase(fetchFileTemplates.fulfilled, (state, action) => {
+            const raw = action.payload
+            const converted = {}
+            _.forEach(raw, (value) => {
+                converted[value.id] = {
+                    name: value.name,
+                    information: value.extra_informations,
+                    attachments: value.attachments,
+                    icon: value.icon,
+                    libIcon: value.lib_icon,
+                }
+            })
+            console.log('fileTemplateSlice', converted)
+            return converted
+        })
+    }
 })
 
-export {postInformationFieldRemove}
+export {postInformationFieldRemove, fetchFileTemplates}
 export default staticSlice.reducer

@@ -42,12 +42,12 @@ async def upload_attachment(request: Request, file: UploadFile, upload_info: sch
     crud.add_attachment(db, upload_info.file_id, upload_info.id, attachment_id)
     return attachment_id
 
-@router.get("/file/{file_id}", response_class=HTMLResponse)
+@router.get("/file/{file_id}")
 def get_file(request: Request, file_id: int, db=Depends(get_db)):
     validate_user(db, request.cookies['session'])
     return crud.get_file(db, file_id, request)
 
-@router.get("/library/{library_id}", response_class=HTMLResponse)
+@router.get("/library/{library_id}")
 def get_library(request: Request, token: str, library_id: int, db=Depends(get_db)):
     user_id = validate_user(db, token)
     return crud.get_library(db, user_id, library_id)
