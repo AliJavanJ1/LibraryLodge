@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {signUp, fetchProfileData, login, resetProfile} from "../redux/profileSlice";
 import {useNavigate, Link as RouterLink} from "react-router-dom";
@@ -6,7 +5,7 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
-import Alert from "../components/Alert";
+import {setAlert} from "../redux/envSlice";
 import {useEffectOnce} from "react-use";
 
 
@@ -30,7 +29,6 @@ const SignUp = () => {
     const classes = useStyles();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [error, setError] = useState(null);
     const profile = useSelector((state) => state.profile);
 
     useEffectOnce(() => {
@@ -79,7 +77,7 @@ const SignUp = () => {
                         })
                 })
                 .catch((message) => {
-                    setError(message);
+                    dispatch(setAlert({severity: 'error', message: message}));
                 })
 
         },
@@ -176,7 +174,6 @@ const SignUp = () => {
                     {'Library Lodge'}
                 </Typography>
             </Box>
-            {error && <Alert severity="error" message={error} resetFunc={() => setError(null)}/>}
         </Container>
     );
 }

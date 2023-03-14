@@ -6,11 +6,9 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {editProfile, updateProfile} from "../redux/profileSlice";
 import React, {useEffect, useState} from "react";
-import Alert from "./Alert";
-
+import {setAlert} from "../redux/envSlice";
 
 export default function EditProfileDialog({open, onClose}) {
-    const [alert, setAlert] = useState(null);
     const dispatch = useDispatch();
     const profile = useSelector((state) => state.profile);
     const [isEditing, setIsEditing] = useState({
@@ -57,14 +55,14 @@ export default function EditProfileDialog({open, onClose}) {
             dispatch(editProfile(result)).unwrap()
                 .then((res) => {
                     console.log("Edit Profile", res)
-                    setAlert({"severity": "success",
-                                    "message": res.message});
+                    dispatch(setAlert({"severity": "success",
+                                    "message": res.message}));
                     dispatch(updateProfile(result))
                     handleClose();
                 })
                 .catch((message) => {
-                    setAlert({"severity": "error",
-                                    "message": message});
+                    dispatch(setAlert({"severity": "error",
+                                    "message": message}));
                 })
 
         },
@@ -180,9 +178,6 @@ export default function EditProfileDialog({open, onClose}) {
                         Submit
                     </Button>
                 </DialogActions>
-            {alert && <Alert severity={alert.severity}
-                                      message={alert.message}
-                                      resetFunc={() => setAlert(null)}/>}
         </Dialog>
     );
 }

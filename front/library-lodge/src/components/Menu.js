@@ -15,7 +15,6 @@ import {
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import React, {useState} from "react";
 import {logout} from "../redux/profileSlice";
-import Alert from "./Alert";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -25,7 +24,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import EditProfileDialog from "./EditProfileDialog";
-import {setFileDetail, setSettingDialogOpen} from "../redux/envSlice";
+import {setAlert, setFileDetail, setSettingDialogOpen} from "../redux/envSlice";
 import ShareIcon from '@mui/icons-material/Share';
 import LibraryDialog from "./LibraryDialog";
 
@@ -80,7 +79,6 @@ const StyledMenu = styled((props) => (
 }));
 
 export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
-    const [error, setError] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -95,14 +93,13 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
 
 
     const handleLogout = () => {
-        dispatch(logout()).then((res) => {
-            if (res.payload && res.meta.requestStatus) {
+        dispatch(logout()).unwrap()
+            .then((res) => {
                 navigate('/login');
-            }
-            else {
-                setError(res.payload ? res.payload.data : res.error.message);
-            }
-        });
+            })
+            .catch((message) => {
+                dispatch(setAlert({message: message, severity: "error"}));
+            });
     }
     const handleSettings = () => {
         setDrawerMenuOpen(false);
@@ -249,7 +246,6 @@ export default function Menu({drawerMenuOpen, setDrawerMenuOpen}) {
                 </ListItem>
             </List>
             {profileDialogOpen && <EditProfileDialog open={profileDialogOpen} onClose={() => setProfileDialogOpen(false)}/>}
-            {error && <Alert severity="error" message={error} resetFunc={() => setError(null)}/>}
         </Drawer>
     )
 }

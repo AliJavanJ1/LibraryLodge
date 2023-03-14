@@ -15,8 +15,8 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {fetchProfileData} from "../redux/profileSlice"; // TODO: change to delete and add share
 import {useDispatch} from "react-redux";
-import Alert from "./Alert";
 import _ from "lodash";
+import {setAlert} from "../redux/envSlice";
 
 
 function ShareDialog({id, open, onClose}) {
@@ -28,20 +28,18 @@ function ShareDialog({id, open, onClose}) {
     ]); // TODO: get from redux
     const [isAdding, setIsAdding] = useState(false);
     const dispatch = useDispatch();
-    const [alert, setAlert] = useState(null);
 
     const handleDelete = (username) => {
         return () => {
-            dispatch(fetchProfileData({username: username})) // TODO: change to delete share
+            dispatch(fetchProfileData()).unwrap() // TODO: change to delete share
                 .then((res) => {
-                    if (true || res.payload && res.meta.requestStatus) {
-                        setAlert({"severity": "success",
-                            "message": "Stopped sharing with " + username});
-                        setUsers(users.filter((user) => user.username !== username));
-                    } else {
-                        setAlert({"severity": "error",
-                            "message": res.payload ? res.payload.data : res.error.message});
-                    }
+                    dispatch(setAlert({"severity": "success",
+                        "message": "Stopped sharing with " + username}));
+                    setUsers(users.filter((user) => user.username !== username));
+
+                })
+                .catch((message) => {
+                    dispatch(setAlert({message: message, severity: 'error'}))
                 })
         }
     }
@@ -57,16 +55,14 @@ function ShareDialog({id, open, onClose}) {
                                             "Already shared with this user"),
         }),
         onSubmit: values => {
-            dispatch(fetchProfileData(values))
+            dispatch(fetchProfileData()).unwrap() // TODO: change to share
                 .then((res) => {
-                    if (true || res.payload && res.meta.requestStatus) { // TODO: change to share
-                        setAlert({"severity": "success",
-                            "message": "Shared With " + values.username});
-                        setUsers([...users, {id: users.length && users[users.length - 1].id + 1, username: values.username}])
-                    } else {
-                        setAlert({"severity": "error",
-                            "message": res.payload ? res.payload.data : res.error.message});
-                    }
+                    dispatch(setAlert({"severity": "success",
+                        "message": "Shared With " + values.username}));
+                    setUsers([...users, {id: users.length && users[users.length - 1].id + 1, username: values.username}])
+                })
+                .catch((message) => {
+                    dispatch(setAlert({message: message, severity: 'error'}))
                 })
         },
     });
@@ -194,9 +190,6 @@ function ShareDialog({id, open, onClose}) {
                         </ListItem>
                 </List>
             </DialogContent>
-            {alert && <Alert severity={alert.severity}
-                             message={alert.message}
-                             resetFunc={() => setAlert(null)}/>}
         </Dialog>
     )
 }

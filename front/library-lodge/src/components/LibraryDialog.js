@@ -14,51 +14,59 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {fetchProfileData} from "../redux/profileSlice";
 import {useDispatch, useSelector} from "react-redux";
-import Alert from "./Alert";
-import React, {useEffect, useState} from "react";
+import {useEffect} from "react";
 import _ from "lodash";
 import {iconMap} from "../redux/fileTemplateSlice";
+import {createLibrary, fetchLibraryDetails} from "../redux/libraryDetailSlice";
+import {fetchFileDetails} from "../redux/fileDetailSlice";
+import {buildTree} from "../redux/treeSlice";
+import {setAlert} from "../redux/envSlice";
 
 
-
-export default function LibraryDialog({open, onClose, name=null, type=null}) {
-    const [alert, setAlert] = useState(null);
+export default function LibraryDialog({open, onClose, name=null, file_template_id=null}) {
     const dispatch = useDispatch();
     const fileTemplates = useSelector((state) => state.file_templates);
-    const libraryOptions = _.map(_.values(fileTemplates), (value) => {
-        return {name: value.name, libIcon: value.libIcon}
+    const libraryOptions = _.map(fileTemplates, (value, key) => {
+        return {file_template_id: key, type: value.name, libIcon: value.libIcon}
     })
 
     const formik = useFormik({
         validateOnMount: true,
         initialValues: {
             name: name || '',
-            type: type || libraryOptions[0].name
+            file_template_id: file_template_id || libraryOptions[0].file_template_id
         },
         validationSchema: Yup.object({
-            name: Yup.string().required('Required'),
-            type: Yup.string()
+            name: name ? Yup.string().required('Required').notOneOf([name], "Name is still the same") : Yup.string().required('Required'),
+            file_template_id: Yup.string()
                      .required('Required')
-                     .oneOf(libraryOptions.map((option) => option.name))
+                     .oneOf(libraryOptions.map((option) => option.file_template_id))
         }),
         onSubmit: values => {
             const result = name ? {old_name: name, new_name: values.name} : values;
-            dispatch(name ? fetchProfileData(result) : fetchProfileData(result))
+            dispatch(name ? fetchProfileData(result) : createLibrary(result)).unwrap()
                 .then((res) => {
-                    if (res.payload && res.meta.requestStatus) {
-                        if (name)
-                            setAlert({"severity": "success",
-                                            "message": "Library " + name + " renamed to " + values.name + " successfully."})
-                        else
-                            setAlert({"severity": "success",
-                                            "message": "Library " + values.name + " added successfully."})
+                    if (name) {
+                        dispatch(setAlert({
+                            "severity": "success",
+                            "message": "Library " + name + " renamed to " + values.name + " successfully."
+                        }))
                         onClose();
-                    } else {
-                        setAlert({"severity": "error",
-                            "message": res.payload ? res.payload.data : res.error.message});
                     }
-                });
-
+                    else
+                        dispatch(setAlert({"severity": "success",
+                            "message": "Library " + values.name + " added successfully."}))
+                    dispatch(fetchLibraryDetails()).then((res)=>{
+                        dispatch(fetchFileDetails()).then((res)=>{
+                            dispatch(buildTree())
+                        })
+                    })
+                    // onClose();
+                })
+                .catch((message) => {
+                    dispatch(setAlert({"severity": "error",
+                                    "message": message}));
+                })
         },
     });
 
@@ -87,7 +95,8 @@ export default function LibraryDialog({open, onClose, name=null, type=null}) {
             <DialogContent
                 sx={{
                     display: "flex",
-                    alignItems: "space-between",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                     '& .MuiSelect-select': {
                         display: "flex",
                     },
@@ -96,22 +105,24 @@ export default function LibraryDialog({open, onClose, name=null, type=null}) {
                 {name
                  ? (<Box
                         sx={{
-                            width: 200,
+                            width: "warp-content",
                             marginRight: 3,
                             display: "flex",
+                            height: "100%",
+                            alignItems: "center",
                         }}
                     >
-                        {iconMap[libraryOptions.find((option) => option.name === type)].type.render({
+                        {iconMap[libraryOptions.find((option) => String(option.file_template_id) === String(file_template_id)).libIcon].type.render({
                             fontSize: "small",
                             sx: {
                                 marginRight: 1,
                             }
                         })}
-                        {name}
+                        {libraryOptions.find((option) => String(option.file_template_id) === String(file_template_id)).type}
                     </Box>)
                  : (<FormControl
                         margin="normal"
-                        error={formik.touched.name && Boolean(formik.errors.name)}
+                        error={formik.touched.name && Boolean(formik.errors.file_template_id)}
                         sx={{
                             width: 200,
                             marginRight: 3
@@ -119,16 +130,16 @@ export default function LibraryDialog({open, onClose, name=null, type=null}) {
                     >
                         <InputLabel>Type</InputLabel>
                         <Select
-                            name="type"
-                            value={formik.values.type}
+                            name="file_template_id"
+                            value={formik.values.file_template_id}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
                             label="Age"
                         >
                             {libraryOptions.map((option) => (
                                 <MenuItem
-                                    value={option.name}
-                                    key={option.name}
+                                    value={option.file_template_id}
+                                    key={option.file_template_id}
                                     sx={{
                                         display: "flex",
                                         alignItems: "center",
@@ -141,7 +152,7 @@ export default function LibraryDialog({open, onClose, name=null, type=null}) {
                                             marginRight: 1,
                                         }
                                     })}
-                                    {option.name}
+                                    {option.type}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -175,9 +186,6 @@ export default function LibraryDialog({open, onClose, name=null, type=null}) {
                     Submit
                 </Button>
             </DialogActions>
-            {alert && <Alert severity={alert.severity}
-                             message={alert.message}
-                             resetFunc={() => setAlert(null)}/>}
         </Dialog>
     )
 }

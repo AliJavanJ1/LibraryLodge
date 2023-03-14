@@ -1,6 +1,5 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {initialState as staticIS} from './staticSlice'
-import {queries} from "@testing-library/react";
 
 const dummy = {
     "username": "test",
@@ -99,10 +98,7 @@ const editProfile = createAsyncThunk(
     async (arg, {rejectWithValue, fulfillWithValue, getState}) => {
         try {
             const state = getState()
-            console.log("state", state)
-            console.log("data", arg)
             const queries = "?" + new URLSearchParams(arg).toString()
-            console.log(queries)
             const response = await fetch(staticIS.apiDomain + '/account/update_profile/' + state.profile.id + queries, {
                 method: 'PUT',
                 credentials: 'include',
@@ -197,26 +193,10 @@ const staticSlice = createSlice({
             state = action.payload
             return state
         })
-        // builder.addCase(login.fulfilled, (state, action) => {
-        //     state = action.payload
-        //     return state
-        // })
-        // builder.addCase(signUp.fulfilled, (state, action) => {
-        //     state = action.payload
-        //     return state
-        // })
         builder.addCase(logout.fulfilled, (state, action) => { // TODO: should I delete action input?
             state = null
             return state
         })
-        // builder.addCase(editProfile.fulfilled, (state, action) => {
-        //     state = action.payload
-        //     return state
-        // })
-        // builder.addCase(resetPassword.fulfilled, (state, action) => {
-        //     state = action.payload
-        //     return state
-        // })
     }
 })
 

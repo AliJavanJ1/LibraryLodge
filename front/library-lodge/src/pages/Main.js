@@ -6,7 +6,6 @@ import Menu from "../components/Menu";
 import {Box, styled} from "@mui/material";
 import SettingDialog from "../components/settingDialog";
 import Dashboard from "./Dashboard";
-import ListItemContextMenu from "../components/ListItemContextMenu"; // TODO: remove this and use it for List Items
 import {useEffectOnce, useLocation} from "react-use";
 import {setLocation} from "../redux/envSlice";
 import _ from "lodash";
@@ -61,51 +60,15 @@ export default function Main() {
     const profile = useSelector((state) => state.profile);
     const navigate = useNavigate();
 
-    const [listItemContextMenu, setListItemContextMenu] = useState({
-        id: 1,
-        open: false,
-        mouseX: 0,
-        mouseY: 0,
-    }); // TODO: remove this and use it for List Items
-
     useEffectOnce(() => {
         if (!profile) {
             navigate('/login');
         }
     });
-    const handleListItemContextMenu = (event) => { // TODO: remove this and use it for List Items
-        event.preventDefault();
-        setListItemContextMenu(
-            listItemContextMenu.open === false
-                ? {
-                    id: 1,
-                    open: true,
-                    mouseX: event.clientX + 2,
-                    mouseY: event.clientY - 6,
-                }
-                : {
-                    id: 1,
-                    open: false,
-                    mouseX: 0,
-                    mouseY: 0,
-                },
-        );
-    };
-    const handleListItemContextMenuClose = () => { // TODO: remove this and use it for List Items
-        setListItemContextMenu({
-            id: 1,
-            open: false,
-            mouseX: 0,
-            mouseY: 0,
-        });
-    };
 
     return isLoggedIn
         ? (<Fragment>
-            <Box onContextMenu={handleListItemContextMenu} sx={{ cursor: 'context-menu' }}> {/* TODO: remove this box and ListItemContextMenu and use it for List Items */}
-                <Header setDrawerMenuOpen={setDrawerMenuOpen} drawerMenuOpen={drawerMenuOpen}/>
-                {/*<ListItemContextMenu contextMenu={listItemContextMenu} handleClose={handleListItemContextMenuClose}/>*/}
-            </Box>
+            <Header setDrawerMenuOpen={setDrawerMenuOpen} drawerMenuOpen={drawerMenuOpen}/>
             <Box
                 sx={{
                     display: 'flex',

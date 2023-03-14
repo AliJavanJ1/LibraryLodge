@@ -6,6 +6,8 @@ import SignUp from "./pages/SignUp";
 import Main from "./pages/Main";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
 import PasswordReset from "./pages/PasswordReset";
+import Alert from "./components/Alert";
+import React from "react";
 
 LicenseInfo.setLicenseKey('x0jTPl0USVkVZV0SsMjM1kDNyADM5cjM2ETPZJVSQhVRsIDN0YTM6IVREJ1T0b9586ef25c9853decfa7709eee27a1e');
 
@@ -53,6 +55,7 @@ function App() {
                     <Route path="/*" element={<Main/>}/>
                 </Routes>
             </BrowserRouter>
+            <Alert/>
         </ThemeProvider>
     );
 }

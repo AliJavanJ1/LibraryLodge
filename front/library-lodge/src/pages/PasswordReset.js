@@ -3,10 +3,9 @@ import * as Yup from "yup";
 import {useDispatch} from "react-redux";
 import {fetchProfileData, resetPassword} from "../redux/profileSlice";
 import {Link as RouterLink, useNavigate, useParams} from "react-router-dom";
-import Alert from "../components/Alert";
-import React, {useState} from "react";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
+import {setAlert} from "../redux/envSlice";
 
 
 
@@ -29,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
 function PasswordReset() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [error, setError] = useState(null);
     const token = useParams().token;
     const classes = useStyles();
 
@@ -49,14 +47,13 @@ function PasswordReset() {
         onSubmit: values => {
             const result = { ...values, token: token }
             delete result.password_confirmation;
-            dispatch(resetPassword(values))
+            dispatch(resetPassword(values)).unwrap()
                 .then((res) => {
-                    if (res.payload && res.meta.requestStatus) {
-                        // dispatch(fetchProfileData()) // // TODO: should we fetch profile data after reset password?
-                        navigate('/');
-                    } else {
-                        setError(res.payload ? res.payload.data : res.error.message);
-                    }
+                    // dispatch(fetchProfileData()) // // TODO: should we fetch profile data after reset password?
+                    navigate('/');
+                })
+                .catch((message) => {
+                    dispatch(setAlert({message: message, severity: 'error'}))
                 });
 
         },
@@ -132,7 +129,6 @@ function PasswordReset() {
                     {'Library Lodge'}
                 </Typography>
             </Box>
-            {error && <Alert severity="error" message={error} resetFunc={() => setError(null)}/>}
         </Container>
     )
 }

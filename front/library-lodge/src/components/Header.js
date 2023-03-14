@@ -9,8 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {logout} from "../redux/profileSlice";
 import {useDispatch} from "react-redux";
 import {useState} from "react";
-import Alert from "./Alert";
-import {setSettingDialogOpen} from "../redux/envSlice";
+import {setAlert, setSettingDialogOpen} from "../redux/envSlice";
 import SearchDialog from "./SearchDialog";
 
 const AppBar = styled(MuiAppBar, {
@@ -33,18 +32,16 @@ const AppBar = styled(MuiAppBar, {
 export default function Header({ setDrawerMenuOpen, drawerMenuOpen }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const [error, setError] = useState(null);
     const [searchDialogOpen, setSearchDialogOpen] = useState(false);
 
     const handleLogout = () => {
-        dispatch(logout()).then((res) => {
-            if (res.payload && res.meta.requestStatus) {
+        dispatch(logout()).unwrap()
+            .then((res) => {
                 navigate('/login');
-            }
-            else {
-                setError(res.payload ? res.payload.data : res.error.message);
-            }
-        });
+            })
+            .catch((message) => {
+                dispatch(setAlert({message: message, severity: "error"}));
+            });
     }
     const handleSettings = () => {
         setDrawerMenuOpen(false);
@@ -166,7 +163,6 @@ export default function Header({ setDrawerMenuOpen, drawerMenuOpen }) {
                     />
                 </IconButton>
             </Toolbar>
-            {error && <Alert severity="error" message={error} resetFunc={() => setError(null)} />}
         </AppBar>
     );
 }
