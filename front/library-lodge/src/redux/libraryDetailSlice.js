@@ -48,6 +48,57 @@ const fetchLibraryDetails = createAsyncThunk(
     }
 )
 
+const createLibrary = createAsyncThunk(
+    'libraryDetail/createLibrary',
+    async (input, {
+        rejectWithValue,
+        fulfillWithValue,
+    }) => {
+        try {
+            const response = await fetch(staticIS.apiDomain + '/dashboard/create/library', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(input),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        } catch (e) {
+            return rejectWithValue(e.message)
+        }
+    }
+)
+
+const deleteLibrary = createAsyncThunk(
+    'libraryDetail/deleteLibrary',
+    async (input, {
+        rejectWithValue,
+        fulfillWithValue,
+    }) => {
+        try {
+            const queries = "?" + new URLSearchParams(input).toString()
+            const response = await fetch(staticIS.apiDomain + '/dashboard/delete_library/' + input.library_id + queries , {
+                method: 'DELETE',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(input),
+            })
+            if (!response.ok) {
+                return rejectWithValue(response.statusText)
+            }
+            return fulfillWithValue(await response.json())
+        } catch (e) {
+            return rejectWithValue(e.message)
+        }
+    }
+)
+
 const initialState = {
     ...dummy,
 }
@@ -74,6 +125,6 @@ const staticSlice = createSlice({
     }
 })
 
-export {fetchLibraryDetails}
+export {fetchLibraryDetails, createLibrary, deleteLibrary}
 export const {} = staticSlice.actions
 export default staticSlice.reducer

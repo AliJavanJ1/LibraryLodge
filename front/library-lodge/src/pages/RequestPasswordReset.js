@@ -2,11 +2,10 @@ import {useFormik} from "formik";
 import * as Yup from "yup";
 import {useDispatch} from "react-redux";
 import {requestPasswordReset} from "../redux/profileSlice";
-import Alert from "../components/Alert";
-import React, {useState} from "react";
 import {Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography} from "@mui/material";
 import {makeStyles} from "@mui/styles";
 import {Link as RouterLink} from "react-router-dom";
+import {setAlert} from "../redux/envSlice";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -26,7 +25,6 @@ const useStyles = makeStyles((theme) => ({
 
 const RequestPasswordReset = () => {
     const dispatch = useDispatch();
-    const [alert, setAlert] = useState(null);
     const classes = useStyles();
 
     const formik = useFormik({
@@ -40,15 +38,13 @@ const RequestPasswordReset = () => {
                 .required('Required'),
         }),
         onSubmit: values => {
-            dispatch(requestPasswordReset(values))
+            dispatch(requestPasswordReset(values)).unwrap()
                 .then((res) => {
-                    if (res.payload && res.meta.requestStatus) {
-                        setAlert({"severity": "success",
-                            "message": "Password reset email sent"});
-                    } else {
-                        setAlert({"severity": "error",
-                            "message": res.payload ? res.payload.data : res.error.message});
-                    }
+                    dispatch(setAlert({"severity": "success",
+                        "message": "Password reset email sent"}));
+                })
+                .catch((message) => {
+                    dispatch(setAlert({message: message, severity: 'error'}))
                 });
 
         },
@@ -109,9 +105,6 @@ const RequestPasswordReset = () => {
                     {'Library Lodge'}
                 </Typography>
             </Box>
-            {alert && <Alert severity={alert.severity}
-                             message={alert.message}
-                             resetFunc={() => setAlert(null)}/>}
         </Container>
     );
 }

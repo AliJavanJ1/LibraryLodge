@@ -185,6 +185,32 @@ const fetchFileDetails = createAsyncThunk(
     }
 )
 
+const deleteFile = createAsyncThunk(
+    'fileDetail/deleteFile',
+    async (input, {
+        rejectWithValue,
+        fulfillWithValue,
+}) => {
+    try {
+        const queries = "?" + new URLSearchParams(input).toString()
+        const response = await fetch(staticIS.apiDomain + '/dashboard/delete_file' + input.file_id + queries, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(input),
+        })
+        if (!response.ok) {
+            return rejectWithValue(response.status)
+        }
+        return fulfillWithValue(await response.json())
+    } catch (e) {
+        return rejectWithValue(e.message)
+    }
+})
+
+
 const initialState = {
     ...dummy,
 }
@@ -223,6 +249,6 @@ const fileDetailSlice = createSlice({
     }
 })
 
-export {fetchFileDetails}
+export {fetchFileDetails, deleteFile}
 export const {} = fileDetailSlice.actions
 export default fileDetailSlice.reducer

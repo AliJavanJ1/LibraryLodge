@@ -34,6 +34,13 @@ const buildTree = createAsyncThunk(
     }
 )
 
+const resetTree = createAsyncThunk(
+    'tree/resetTree',
+    async (payload, thunkAPI) => {
+        return initialState
+    }
+)
+
 const initialState = {
     // ...dummy,
 }
@@ -41,15 +48,20 @@ const initialState = {
 const treeSlice = createSlice({
     name: 'tree',
     initialState,
-    reducers: {},
+    reducers: {
+    },
     extraReducers: (builder) => {
         builder.addCase(buildTree.fulfilled, (state, action) => {
             // console.log('buildTree.fulfilled', action.payload)
             return action.payload
         })
+        builder.addCase(resetTree.fulfilled, (state, action) => {
+            console.log('resetTree.fulfilled', action.payload)
+            return action.payload
+        })
     }
 })
 
-export {buildTree}
+export {buildTree, resetTree}
 export const {} = treeSlice.actions
 export default treeSlice.reducer

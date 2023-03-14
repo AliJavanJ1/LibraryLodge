@@ -7,7 +7,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import * as Yup from "yup";
 import {useFormik} from "formik";
-import Alert from "./Alert";
+import {useDispatch} from "react-redux";
+import {setAlert} from "../redux/envSlice";
 
 export const StyledIconButton = styled(IconButton)({
     padding: .5,
@@ -67,7 +68,7 @@ const Adornment = ({editMode, sureMode, onEdit, onRemove, onCancel, setEditMode,
 function StandaloneField({value, onEdit, onRemove, ...props}) {
     const [editMode, setEditMode] = useState(false);
     const [sureMode, setSureMode] = useState(false);
-    const [alert, setAlert] = useState({});
+    const dispatch = useDispatch();
 
     const initialValue = useMemo(() => ({
         value: value
@@ -88,10 +89,10 @@ function StandaloneField({value, onEdit, onRemove, ...props}) {
             onEdit(formik.values.value);
             formik.resetForm(); //remaps initialValues
         } else {
-            setAlert({
+            dispatch(setAlert({
                 severity: 'error',
                 message: formik.errors.value
-            })
+            }))
         }
     }
 
@@ -136,7 +137,6 @@ function StandaloneField({value, onEdit, onRemove, ...props}) {
                 onChange={formik.handleChange}
                 disabled={!editMode}
             />
-            {alert.message && <Alert severity={alert.severity} message={alert.message} resetFunc={() => setAlert({})}/>}
         </>
     );
 }

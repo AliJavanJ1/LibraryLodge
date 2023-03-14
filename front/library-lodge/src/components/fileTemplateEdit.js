@@ -1,4 +1,3 @@
-import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as Yup from "yup";
 import {
@@ -8,12 +7,12 @@ import {
     Tooltip,
     Typography,
 } from "@mui/material";
-import Alert from './Alert';
 import StandaloneField, {StyledIconButton} from "./standaloneField";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import {useFormik} from "formik";
 import _ from "lodash";
 import {postInformationFieldRemove} from "../redux/fileTemplateSlice";
+import {setAlert} from "../redux/envSlice";
 
 const TypographyHeader = (props) => {
     return (
@@ -24,7 +23,8 @@ const TypographyHeader = (props) => {
 }
 
 const AddField = (props) => {
-    const [alert, setAlert] = useState({});
+    const dispatch = useDispatch();
+
     const formik = useFormik({
         validateOnMount: true,
         initialValues: {
@@ -40,10 +40,10 @@ const AddField = (props) => {
             props.createHandler(formik.values.value);
             formik.resetForm();
         } else {
-            setAlert({
+            dispatch(setAlert({
                 severity: 'error',
                 message: formik.errors.value
-            })
+            }))
         }
     }
 
@@ -67,7 +67,6 @@ const AddField = (props) => {
                     )
                 }}
             />
-            {alert.message && <Alert severity={alert.severity} message={alert.message} resetFunc={() => setAlert({})}/>}
         </Stack>
     );
 }
@@ -76,7 +75,6 @@ const AddField = (props) => {
 const FileTemplateEdit = (props) => {
     const templateId = props.id;
     const dispatch = useDispatch();
-    const [alert, setAlert] = useState({});
 
     const fileTemplate = useSelector(state => state.file_templates[templateId]);
 
@@ -99,16 +97,16 @@ const FileTemplateEdit = (props) => {
                                 onRemove={() => {//todo call the thunk with templateId and fieldId
                                     dispatch(postInformationFieldRemove({templateId, id})).unwrap()
                                         .then((res) => {
-                                            setAlert({
+                                            dispatch(setAlert({
                                                 severity: 'success',
                                                 message: 'Information field removed successfully'
-                                            })
+                                            }))
                                         })
                                         .catch((err) => {
-                                            setAlert({
+                                            dispatch(setAlert({
                                                 severity: 'error',
                                                 message: 'Failed to remove information field'
-                                            })
+                                            }))
                                         })
                                 }}
                                 onEdit={(value) => {//todo call the thunk with templateId and fieldId and edited field name
@@ -145,7 +143,6 @@ const FileTemplateEdit = (props) => {
                 <AddField createHandler={() => {//todo
                 }}/>
             </Stack>
-            {alert.message && <Alert severity={alert.severity} message={alert.message} resetFunc={() => setAlert({})}/>}
         </Stack>
     );
 };
