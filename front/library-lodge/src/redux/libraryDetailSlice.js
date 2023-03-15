@@ -80,10 +80,10 @@ const deleteLibrary = createAsyncThunk(
         fulfillWithValue,
     }) => {
         try {
-            const queries = "?" + new URLSearchParams(input).toString()
-            const response = await fetch(staticIS.apiDomain + '/dashboard/delete_library/' + input.library_id + queries , {
+            const response = await fetch(staticIS.apiDomain + '/dashboard/delete_library/' + input.library_id , {
                 method: 'DELETE',
                 credentials: 'include',
+                accessControlAllowOrigin: staticIS.domain,
                 headers: {
                     'Content-Type': 'application/json',
                 },

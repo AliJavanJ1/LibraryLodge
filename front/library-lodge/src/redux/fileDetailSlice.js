@@ -192,10 +192,10 @@ const deleteFile = createAsyncThunk(
         fulfillWithValue,
 }) => {
     try {
-        const queries = "?" + new URLSearchParams(input).toString()
-        const response = await fetch(staticIS.apiDomain + '/dashboard/delete_file' + input.file_id + queries, {
-            method: 'POST',
+        const response = await fetch(staticIS.apiDomain + '/dashboard/delete_file/' + input.file_id, {
+            method: 'DELETE',
             credentials: 'include',
+            accessControlAllowOrigin: staticIS.domain,
             headers: {
                 'Content-Type': 'application/json',
             },
