@@ -243,7 +243,7 @@ const fileDetailSlice = createSlice({
                     }, {}),
                 }
             })
-            console.log('fileDetailSlice', converted)
+            // console.log('fileDetailSlice', converted)
             return converted
         })
     }

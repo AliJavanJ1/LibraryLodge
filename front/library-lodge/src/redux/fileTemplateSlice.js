@@ -159,8 +159,8 @@ const staticSlice = createSlice({
                     name: value.name,
                     information: value.extra_informations,
                     attachments: value.attachments,
-                    icon: value.icon,
-                    libIcon: value.lib_icon,
+                    icon: value.icon.toString().trim(),
+                    libIcon: value.lib_icon.toString().trim(),
                 }
             })
             // console.log('fileTemplateSlice', converted)
