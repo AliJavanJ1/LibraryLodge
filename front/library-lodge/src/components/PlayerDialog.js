@@ -16,7 +16,7 @@ export default function PlayerDialog({url, open, onClose}) {
             }}
         >
             <Replay
-                source="https://vimond.github.io/replay/public/example-media/progressive.mp4" // TODO: replace with url
+                source={url || "https://vimond.github.io/replay/public/example-media/progressive.mp4"}
                 initialPlaybackProps={{ isPaused: true }}
             />
         </Dialog>

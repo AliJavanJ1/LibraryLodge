@@ -226,7 +226,7 @@ const ViewFileDetails = ({fileId}) => {
                     mt: 'auto'
                 }}>
                     {
-                        fileTemplate.name === 'Movie' &&
+                        ['Movie', 'Music'].includes(fileTemplate.name) &&
                         <Button variant={'outlined'} size={'small'} onClick={() => {
                             setPlayerDialogOpen(true)
                         }
@@ -247,7 +247,7 @@ const ViewFileDetails = ({fileId}) => {
                     </Button>
                 </Stack>
             </Stack>
-            {playerDialogOpen && <PlayerDialog url={null} open={playerDialogOpen} onClose={() => setPlayerDialogOpen(false)}/>}
+            {playerDialogOpen && <PlayerDialog url={staticIS.apiDomain + '/dashboard/download/' + fileId} open={playerDialogOpen} onClose={() => setPlayerDialogOpen(false)}/>}
         </Paper>
     );
 }

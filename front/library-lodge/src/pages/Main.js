@@ -9,6 +9,7 @@ import Dashboard from "./Dashboard";
 import {useEffectOnce, useLocation} from "react-use";
 import {setLocation} from "../redux/envSlice";
 import _ from "lodash";
+import {fetchProfileData, resetProfile} from "../redux/profileSlice";
 
 
 const MainBody = styled('main', { shouldForwardProp: (prop) => prop !== 'drawerMenuOpen' })(
@@ -59,10 +60,15 @@ export default function Main() {
     const [drawerMenuOpen, setDrawerMenuOpen] = useState(false);
     const profile = useSelector((state) => state.profile);
     const navigate = useNavigate();
+    const dispatch = useDispatch()
 
     useEffectOnce(() => {
         if (!profile) {
-            navigate('/login');
+            dispatch(fetchProfileData()).unwrap()
+                .catch((message) => {
+                    dispatch(resetProfile())
+                    navigate('/login')
+                })
         }
     });
 

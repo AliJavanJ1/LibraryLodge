@@ -2,11 +2,9 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const dummy = {
     libraries: {
-        3: {
-            files: [9],
-        },
+
     },
-    files: [8]
+    files: []
 }
 
 const initialState = {
